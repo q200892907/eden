@@ -1,0 +1,74 @@
+# 发布配置
+publish:
+  apiUrl:
+  # 基础配置
+  # 用于上传appstore的配置,不要轻易修改
+  appleId: ""
+  bundleId: com.eden.eden
+  appstoreApiKey:
+  appstoreApiIssuer:
+  # p8文件所在目录，与key/issuer相关，不要轻易修改
+  appstoreP8: ios/fastlane/xxxx.p8
+  # 删除appstore所需altool命令的工具路径，默认直接使用xcode中包含的
+  alTool: /Applications/Xcode.app/Contents/Developer/usr/bin/
+  testFlight: xxxx
+  # 发布方式，eden/pgyer/testflight/appstore,不配置默认eden
+  publishTypes:
+    ios:
+      dev: pgyer
+      stage: pgyer
+      release: testflight
+    android:
+      dev: pgyer
+      stage: pgyer
+      release: pgyer
+  # iOS发布方式
+  iosType: testflight
+  # 发布目录-复制使用
+  output: publishFile
+  # 修改版本号的位置
+  version: lib/config/eden_version.dart
+  # 支持平台
+  platforms:
+    - android
+    - ios
+  # 环境
+  envs:
+    dev: 开发环境
+    stage: 测试环境
+    release: 正式环境
+  # 蒲公英配置，仅支持iOS、Android
+  pgyer:
+    upload: true
+    # 飞书通知token
+    fsAccessToken: xxxx
+    # 蒲公英配置
+    apiKey: 27e81c87543c62ad9989f3604ae4659e
+    userKey: 8bd7115b752faba26daeddcab9e71e81
+    password:
+    installType: 1
+    # 渠道配置
+    channelShortcuts:
+      android:
+        dev:
+          "name": "eden_qa_android"
+          "arm64Name": "eden_qa_android_64"
+          "pgyEnv": "qa"
+        stage:
+          "name": "eden_qa_android"
+          "arm64Name": "eden_qa_android_64"
+          "pgyEnv": "qa"
+        release:
+          "name": "eden_pub_android"
+          "arm64Name": "eden_pub_android_64"
+          "pgyEnv": "pub"
+      ios:
+        dev:
+          "name": "eden_qa_ios"
+          "pgyEnv": "qa"
+        stage:
+          "name": "eden_qa_ios"
+          "pgyEnv": "qa"
+        release:
+          "name": "eden_pub_ios"
+          "pgyEnv": "pub"

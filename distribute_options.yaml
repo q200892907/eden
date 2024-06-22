@@ -1,0 +1,57 @@
+output: publishFile/
+releases:
+  - name: ios
+    jobs:
+      - name: dev
+        package:
+          platform: ios
+          target: ipa
+          build_args:
+            export-options-plist: ios/ExportOptions.plist
+            dart-define:
+              ENV: dev
+      - name: stage
+        package:
+          platform: ios
+          target: ipa
+          build_args:
+            export-options-plist: ios/ExportOptions.plist
+            dart-define:
+              ENV: stage
+      - name: release
+        package:
+          platform: ios
+          target: ipa
+          build_args:
+            export-options-plist: ios/ExportOptionsRelease.plist
+            dart-define:
+              ENV: release
+  - name: android
+    jobs:
+      - name: dev
+        package:
+          platform: android
+          target: apk
+          build_args:
+            target-platform: android-arm,android-arm64
+            split-per-abi:
+            dart-define:
+              ENV: dev
+      - name: stage
+        package:
+          platform: android
+          target: apk
+          build_args:
+            target-platform: android-arm,android-arm64
+            split-per-abi:
+            dart-define:
+              ENV: stage
+      - name: release
+        package:
+          platform: android
+          target: apk
+          build_args:
+            target-platform: android-arm,android-arm64
+            split-per-abi:
+            dart-define:
+              ENV: release

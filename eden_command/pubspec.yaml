@@ -1,0 +1,33 @@
+name: eden_command
+description: "Eden command"
+version: 1.0.0
+homepage:
+
+publish_to: none
+
+platforms:
+  linux:
+  macos:
+  windows:
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  yaml: ^3.1.2
+  pubspec_parse: ^1.3.0
+  args: ^2.5.0
+  ansicolor: ^2.0.2
+  logging: ^1.2.0
+  shell_uikit: ^0.1.1
+  dio: ^5.4.3+1
+  path: ^1.9.0
+  process_run: ^0.14.2
+  xml: ^6.5.0
+dev_dependencies:
+  test: any
+
+executables:
+  eden: main

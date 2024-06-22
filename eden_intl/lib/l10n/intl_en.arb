@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "httpTimeout": "Network anomaly",
+  "httpCodeError": "The service is abnormal-Err.{code}",
+  "httpStatusCodeError": "The network connection is abnormal-Err.{code}",
+  "httpParamsError": "Parameter abnormality",
+  "httpParseError": "Parsing exceptions",
+  "loadingText": "Loading...",
+  "noDataText": "No more data",
+  "canLoadingText": "Release to load more",
+  "idleText": "Pull up Load more",
+  "failedText": "Load Failed",
+  "clickToTryAgain": "Click to try again",
+  "appName": "Eden"
+}
