@@ -8,13 +8,13 @@
 
 - lib(主目录)
     - config(配置信息等)
+    - develop(开发工具)
     - pages(页面-功能)
     - plugin(插件初始化)
     - providers(全局状态管理)
     - router(路由表，go_router生成)
     - utils(功能封装库)
-    - webview(网页组件)
-    - widgets(功能组件封装，如倒计时)
+    - uikit(功能组件封装，如倒计时)
 - eden_command(命令行工具)
 - eden_icons(图标库)
 - eden_internet_connection_checker(网络变化监听)
@@ -52,7 +52,7 @@ cd ios
 fastlane match_all
 ```
 
-6. 安装zhiya命令工具
+6. 安装eden命令工具
 
 ```shell
 dart pub global activate --source path eden_command

@@ -1,0 +1,12 @@
+# dart run icons_launcher:create
+
+icons_launcher:
+  image_path: "icon/icon.png"
+  platforms:
+    android:
+      enable: true
+      image_path: "icon/icon.png"
+      adaptive_round_image: "icon/icon_round.png"
+    ios:
+      enable: true
+      image_path: "icon/icon.png"
