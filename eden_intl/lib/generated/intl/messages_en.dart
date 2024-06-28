@@ -26,12 +26,16 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "aiChat": MessageLookupByLibrary.simpleMessage("AI Chat"),
         "appName": MessageLookupByLibrary.simpleMessage("Eden"),
         "canLoadingText":
             MessageLookupByLibrary.simpleMessage("Release to load more"),
         "clickToTryAgain":
             MessageLookupByLibrary.simpleMessage("Click to try again"),
+        "community": MessageLookupByLibrary.simpleMessage("Community"),
+        "darkTheme": MessageLookupByLibrary.simpleMessage("Dark"),
         "failedText": MessageLookupByLibrary.simpleMessage("Load Failed"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
         "httpCodeError": m0,
         "httpParamsError":
             MessageLookupByLibrary.simpleMessage("Parameter abnormality"),
@@ -40,7 +44,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "httpStatusCodeError": m1,
         "httpTimeout": MessageLookupByLibrary.simpleMessage("Network anomaly"),
         "idleText": MessageLookupByLibrary.simpleMessage("Pull up Load more"),
+        "lightTheme": MessageLookupByLibrary.simpleMessage("Light"),
         "loadingText": MessageLookupByLibrary.simpleMessage("Loading..."),
-        "noDataText": MessageLookupByLibrary.simpleMessage("No more data")
+        "noDataText": MessageLookupByLibrary.simpleMessage("No more data"),
+        "personage": MessageLookupByLibrary.simpleMessage("Personage"),
+        "systemTheme": MessageLookupByLibrary.simpleMessage("System"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "themeMode": MessageLookupByLibrary.simpleMessage("Theme Mode")
       };
 }

@@ -2,7 +2,7 @@ import 'eden_server.dart';
 
 class EdenDevServer extends EdenServer {
   @override
-  String get apiUrl => '';
+  String get apiUri => '';
 
   @override
   String get objectbox => 'eden_objectbox_dev';
@@ -11,7 +11,7 @@ class EdenDevServer extends EdenServer {
 /// 测试环境默认配置
 class EdenStageServer extends EdenServer {
   @override
-  String get apiUrl => '';
+  String get apiUri => '';
 
   @override
   String get objectbox => 'eden_objectbox_stage';
@@ -20,7 +20,7 @@ class EdenStageServer extends EdenServer {
 /// 正式环境默认配置
 class EdenReleaseServer extends EdenServer {
   @override
-  String get apiUrl => '';
+  String get apiUri => '';
 
   @override
   String get objectbox => 'eden_objectbox';

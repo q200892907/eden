@@ -50,6 +50,56 @@ class EdenStrings {
     return Localizations.of<EdenStrings>(context, EdenStrings);
   }
 
+  /// `Theme Mode`
+  String get themeMode {
+    return Intl.message(
+      'Theme Mode',
+      name: 'themeMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme`
+  String get theme {
+    return Intl.message(
+      'Theme',
+      name: 'theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get lightTheme {
+    return Intl.message(
+      'Light',
+      name: 'lightTheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get darkTheme {
+    return Intl.message(
+      'Dark',
+      name: 'darkTheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System`
+  String get systemTheme {
+    return Intl.message(
+      'System',
+      name: 'systemTheme',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Network anomaly`
   String get httpTimeout {
     return Intl.message(
@@ -165,6 +215,46 @@ class EdenStrings {
     return Intl.message(
       'Eden',
       name: 'appName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get home {
+    return Intl.message(
+      'Home',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Community`
+  String get community {
+    return Intl.message(
+      'Community',
+      name: 'community',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI Chat`
+  String get aiChat {
+    return Intl.message(
+      'AI Chat',
+      name: 'aiChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personage`
+  String get personage {
+    return Intl.message(
+      'Personage',
+      name: 'personage',
       desc: '',
       args: [],
     );

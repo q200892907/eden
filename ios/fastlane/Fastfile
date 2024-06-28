@@ -1,0 +1,112 @@
+ # This file contains the fastlane.tools configuration
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+api_key = app_store_connect_api_key(
+    key_id: "S28KSV9FT2",
+    issuer_id: "1f5e7e2a-3e47-4192-a763-8aeec351f941",
+    key_content: "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgBJr8JhIOqhJP6iJBH9pFREcHM9mOFARfoItqxj0aQuSgCgYIKoZIzj0DAQehRANCAASuqmBe6Ip8ESSlqGRm2mbXBj/wkir/0qhIQuMi1J4fLiFz4PYBJs3m9OvG7fMEGzo35FnfaP8sYN7aFBI76AK8\n-----END PRIVATE KEY-----",
+    duration: 1200, # optional (maximum 1200)
+    in_house: false # optional but may be required if using match/sigh
+)
+
+desc "下载所有需要的证书和描述文件到本地，不会重新创建证书和描述文件（只读方式）"
+lane :match_all do
+    match(api_key: api_key, type: "development", readonly: true)
+    match(api_key: api_key, type: "adhoc", readonly: true)
+    match(api_key: api_key, type: "appstore", readonly: true)
+end
+
+desc "同步证书，如果证书过期或新增了设备，会重新创建证书和描述文件"
+desc "该方法仅限管理员使用，其他开发成员只需要使用 match_all 方法即可"
+lane :force_match do
+    match(api_key: api_key, type: "development", force_for_new_devices: true)
+    match(api_key: api_key, type: "adhoc", force_for_new_devices: true)
+    match(api_key: api_key, type: "appstore")
+end
+
+desc "注册设备，并更新描述文件"
+lane :sync_devices do
+    # devices.txt模板：
+    # http://devimages.apple.com/downloads/devices/Multiple-Upload-Samples.zip
+    register_devices(api_key: api_key, devices_file: "./devices.txt")
+    match(api_key: api_key, type: "development", force_for_new_devices: true)
+    match(api_key: api_key, type: "adhoc", force_for_new_devices: true)
+end
+
+platform :ios do |config|
+   # 先同步adhoc证书和描述文件
+   desc "同步adhoc证书和描述文件"
+   match(api_key: api_key, type: "adhoc", readonly: true)
+   desc "打包上传蒲公英"
+   # ios应用配置
+   lane :dev do |config|
+      puts "开始打包开发版本"
+      package(
+      output_name: "app",
+      scheme: 'Runner',
+      environment:'dev',
+      config: config
+      )
+   end
+   lane :qa do |config|
+      puts "开始打包测试版本"
+      package(
+      output_name: "app",
+      scheme: 'Runner',
+      environment:'dev',
+      config: config
+      )
+   end
+   lane :pub do |config|
+      puts "开始打包正式版本"
+      package(
+        output_name: "app",
+        scheme: 'Runner',
+        environment:'pub',
+        config: config
+      )
+   end
+
+   #最终打包
+   lane :package do |option|
+      # 开始打包
+      gym(
+      clean: false, #打包前clean项目
+      export_method: "ad-hoc", #导出方式
+      scheme: option[:scheme], #scheme
+      configuration: option[:build_type], #环境
+      export_options: {iCloudContainerEnvironment: 'Production'},
+      output_directory: option[:config][:outputDir], #ipa的存放目录
+      output_name: option[:output_name] #输出ipa的文件名
+      )
+      puts "打包成功"
+      puts "开始上传到蒲公英"
+      #开始上传ipa到蒲公英，这里用的是蒲公英提供的插件
+      #update_description代表更新信息，password代表安装密码
+      pgyer_cl(
+                update_description: option[:config][:desc],
+                api_key: option[:config][:api_key],
+                user_key: option[:config][:user_key],
+                password: option[:config][:password],
+                install_type: option[:config][:install_type],
+                channel_shortcut: option[:config][:channel_shortcut],
+                fs_access_token: option[:config][:fs_access_token],
+                environment: option[:environment]
+            )
+   end
+end

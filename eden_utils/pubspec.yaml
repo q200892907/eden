@@ -16,6 +16,10 @@ dependencies:
   permission_handler: any
   synchronized: any
   device_info_plus: any
+  intl: any
+  jiffy: any
+  convert: any
+  crypto: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

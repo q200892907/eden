@@ -5,6 +5,7 @@ import 'package:eden_logger/eden_log_util.dart';
 import 'package:logger/logger.dart';
 
 export 'eden_log_logger.dart';
+export 'eden_log_util.dart';
 
 class EdenLogger {
   static Logger _logger = _defaultLogger;

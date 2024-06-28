@@ -66,6 +66,7 @@ dependencies:
   keyboard_height_plugin: any
   card_swiper: any
   flutter_svg: any
+  dropdown_button2: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

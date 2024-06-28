@@ -23,6 +23,44 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+def dartDefines = [
+        APP_CHANNEL: 'main',
+        ENV        : 'dev',
+]
+if (project.hasProperty('dart-defines')) {
+    dartDefines.putAll(project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                [(pair.first()): pair.last()]
+            })
+}
+
+def env = dartDefines.ENV
+
+def config = '.env.dev'
+if (env == 'release') {
+    config = '.env.release'
+}
+
+def configProperties = new Properties()
+def versionPropertiesFile = rootProject.file('../assets/config/' + config)
+if (versionPropertiesFile.exists()) {
+    versionPropertiesFile.withReader('UTF-8') {
+        reader -> configProperties.load(reader)
+    }
+}
+
+configProperties.each { entity ->
+    dartDefines.put(entity.key, entity.value)
+}
+
+println 'Android构建配置-' + dartDefines
+
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace = "com.eden.eden"
     compileSdk = flutter.compileSdkVersion
@@ -38,17 +76,68 @@ android {
         applicationId = "com.eden.eden"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+
+        manifestPlaceholders = dartDefines
+        multiDexEnabled true
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+
+            // 解决分包versionCode不一致问题，无论任何架构均加1000
+            output.versionCodeOverride = 1000 + variant.versionCode
+            if (variant.buildType.name == "release") {
+                // 设置新名称
+                def newApkName = "app_v${defaultConfig.versionName}_${defaultConfig.versionCode}_channel_${dartDefines.APP_CHANNEL}_${output.baseName}.apk"
+                outputFileName = new File(newApkName)
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+//            ndk {
+//                abiFilters "armeabi-v7a"
+//            }
+        }
+        profile {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+//            ndk {
+//                abiFilters "armeabi-v7a"
+//            }
+        }
+        debug {
+            signingConfig signingConfigs.release
+//            ndk {
+//                abiFilters "armeabi-v7a", "arm64-v8a", "x86_64", "x86"
+//            }
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
         }
     }
 }

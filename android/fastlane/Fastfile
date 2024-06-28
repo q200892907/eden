@@ -1,0 +1,66 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do |config|
+   desc "打包上传蒲公英"
+
+   lane:dev do |config|
+      puts "开始打包开发版本"
+      package(
+          environment:'dev',
+          config: config
+      )
+   end
+
+   lane:qa do |config|
+      puts "开始打包测试版本"
+      package(
+          environment:'dev',
+          config: config
+      )
+   end
+
+
+   lane:pub do |config|
+      puts "开始打包正式版本"
+      package(
+          environment:'pub',
+          config: config
+      )
+   end
+
+   #打包函数
+   lane:package do |option|
+      buildApk = "../build/app/outputs/flutter-apk/#{option[:config][:build_type]}"
+      puts option[:config]
+      puts "打包成功"
+      puts "开始上传到蒲公英"
+      #开始上传apk到蒲公英，这里用的是蒲公英提供的插件
+      #update_description代表更新信息，password代表安装密码
+      pgyer_cl(
+          update_description: option[:config][:desc],
+          api_key: option[:config][:api_key],
+          user_key: option[:config][:user_key],
+          password: option[:config][:password],
+          install_type: option[:config][:install_type],
+          apk: buildApk,
+          channel_shortcut: option[:config][:channel_shortcut],
+          fs_access_token: option[:config][:fs_access_token],
+          environment: option[:environment]
+      )
+   end
+end

@@ -6,6 +6,8 @@ import 'package:eden_service/config/eden_server_config.dart';
 
 import 'eden_base_service.dart';
 
+typedef OnAccountChanged = void Function(EdenObxAccount user);
+
 /// 账号服务
 class EdenAccountService extends EdenBaseService {
   factory EdenAccountService() => _getInstance();
@@ -14,6 +16,15 @@ class EdenAccountService extends EdenBaseService {
   static EdenAccountService? _instance;
 
   late EdenUserClient _userClient;
+  OnAccountChanged? _onChanged;
+
+  void addChanged(OnAccountChanged onChanged) {
+    _onChanged = onChanged;
+  }
+
+  void removeChanged() {
+    _onChanged = null;
+  }
 
   EdenAccountService._internal() {
     initService();
@@ -86,7 +97,8 @@ class EdenAccountService extends EdenBaseService {
     _isLogging = true;
     EdenServiceState<EdenObxAccount> res;
     //todo 调用接口
-    res = await _userClient.login({}).convert();
+    // res = await _userClient.login({}).convert();
+    res = EdenServiceState(isSuccess: true, data: EdenObxAccount(id: '1'));
     if (!res.isSuccess) {
       _isLogging = false;
       return EdenServiceState(isSuccess: false, message: res.message);
@@ -117,6 +129,7 @@ class EdenAccountService extends EdenBaseService {
     int id = EdenObjectBox.instance.insertAccount(account);
     // 更新登录状态
     EdenObjectBox.instance.updateLoginStatus(id: account.id, isLogin: true);
+    _onChanged?.call(account);
     if (id > 0) {
       _isLogging = false;
       // 更新状态
@@ -135,16 +148,5 @@ class EdenAccountService extends EdenBaseService {
     // 更新状态
     _account = null;
     return EdenServiceState(isSuccess: true);
-  }
-
-  /// 更新用户信息
-  bool _updateAccount(EdenObxAccount account) {
-    account = account.copyWith(isLogin: true);
-    int id = EdenObjectBox.instance.insertAccount(account);
-    if (id > 0) {
-      _account = account;
-      return true;
-    }
-    return false;
   }
 }

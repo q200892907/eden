@@ -1,5 +1,10 @@
 {
   "@@locale": "en",
+  "themeMode": "Theme Mode",
+  "theme": "Theme",
+  "lightTheme": "Light",
+  "darkTheme": "Dark",
+  "systemTheme": "System",
   "httpTimeout": "Network anomaly",
   "httpCodeError": "The service is abnormal-Err.{code}",
   "httpStatusCodeError": "The network connection is abnormal-Err.{code}",
@@ -11,5 +16,9 @@
   "idleText": "Pull up Load more",
   "failedText": "Load Failed",
   "clickToTryAgain": "Click to try again",
-  "appName": "Eden"
+  "appName": "Eden",
+  "home": "Home",
+  "community": "Community",
+  "aiChat": "AI Chat",
+  "personage": "Personage"
 }
