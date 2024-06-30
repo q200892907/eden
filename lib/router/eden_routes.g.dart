@@ -79,7 +79,7 @@ RouteBase get $rootShellRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/ai',
-              factory: $CommunityRouteExtension._fromState,
+              factory: $AiRouteExtension._fromState,
             ),
           ],
         ),
@@ -119,6 +119,23 @@ extension $HomeRouteExtension on HomeRoute {
 extension $CommunityRouteExtension on CommunityRoute {
   static CommunityRoute _fromState(GoRouterState state) =>
       const CommunityRoute();
+
+  String get location => GoRouteData.$location(
+        '/ai',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $AiRouteExtension on AiRoute {
+  static AiRoute _fromState(GoRouterState state) => const AiRoute();
 
   String get location => GoRouteData.$location(
         '/ai',
