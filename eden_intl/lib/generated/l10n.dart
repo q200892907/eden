@@ -259,6 +259,66 @@ class EdenStrings {
       args: [],
     );
   }
+
+  /// `Play`
+  String get play {
+    return Intl.message(
+      'Play',
+      name: 'play',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Touch`
+  String get touch {
+    return Intl.message(
+      'Touch',
+      name: 'touch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automatic`
+  String get automatic {
+    return Intl.message(
+      'Automatic',
+      name: 'automatic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sound`
+  String get sound {
+    return Intl.message(
+      'Sound',
+      name: 'sound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Music`
+  String get music {
+    return Intl.message(
+      'Music',
+      name: 'music',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remote`
+  String get remote {
+    return Intl.message(
+      'Remote',
+      name: 'remote',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<EdenStrings> {

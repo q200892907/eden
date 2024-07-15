@@ -1,4 +1,4 @@
-import 'package:eden/uikit/tips/unrealized_tips.dart';
+import 'package:eden/router/eden_router.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -6,6 +6,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const UnrealizedTips(name: 'Home');
+    return Center(
+      child: TextButton(
+        onPressed: () {
+          const PlayRoute().push(context);
+        },
+        child: const Text('Play'),
+      ),
+    );
   }
 }

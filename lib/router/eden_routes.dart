@@ -1,7 +1,9 @@
 import 'package:eden/pages/login/login_page.dart';
+import 'package:eden/pages/play/play_page.dart';
 import 'package:eden/pages/root/root_page.dart';
 import 'package:eden/pages/splash/splash_page.dart';
 import 'package:eden/router/common/login/zhiya_login_router.dart';
+import 'package:eden/router/common/play/eden_play_router.dart';
 import 'package:eden/router/common/splash/eden_splash_router.dart';
 import 'package:eden/router/eden_router.dart';
 import 'package:flutter/material.dart';
@@ -39,4 +41,14 @@ class RootShellRoute extends EdenStatefulShellRouteData {
       RootPage(
         navigationShell: navigationShell,
       );
+}
+
+// 游戏页面
+@playRoute
+class PlayRoute extends EdenRouteData {
+  const PlayRoute();
+
+  @override
+  Widget buildBody(BuildContext context, GoRouterState state) =>
+      const PlayPage();
 }

@@ -20,5 +20,11 @@
   "home": "Home",
   "community": "Community",
   "aiChat": "AI Chat",
-  "personage": "Personage"
+  "personage": "Personage",
+  "play": "Play",
+  "touch": "Touch",
+  "automatic": "Automatic",
+  "sound": "Sound",
+  "music": "Music",
+  "remote": "Remote"
 }
