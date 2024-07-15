@@ -203,6 +203,10 @@ extension ColorExt on Color {
 }
 
 extension TextStyleEdenThemeExt on TextStyle {
+  TextStyle get white => copyWith(
+        color: Colors.white,
+      );
+
   TextStyle danger(BuildContext? context) => copyWith(
       color: context != null
           ? context.theme.danger

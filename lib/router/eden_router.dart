@@ -19,6 +19,9 @@ class EdenRouter {
   static const String ai = '/ai';
   static const String personage = '/personage';
 
+  static const String play = '/play'; //玩模式
+  static const String touch = 'touch'; //手势
+
   static final GlobalKey<NavigatorState> _navKey = GlobalKey<NavigatorState>();
 
   /// 用于移动端与桌面端的判断，主要用于跳转的问题

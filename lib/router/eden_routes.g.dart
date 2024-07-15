@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
       $splashRoute,
       $loginRoute,
       $rootShellRoute,
+      $playRoute,
     ];
 
 RouteBase get $splashRoute => GoRouteData.$route(
@@ -157,6 +158,52 @@ extension $PersonageRouteExtension on PersonageRoute {
 
   String get location => GoRouteData.$location(
         '/personage',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $playRoute => GoRouteData.$route(
+      path: '/play',
+      factory: $PlayRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'touch',
+          factory: $PlayTouchRouteExtension._fromState,
+        ),
+      ],
+    );
+
+extension $PlayRouteExtension on PlayRoute {
+  static PlayRoute _fromState(GoRouterState state) => const PlayRoute();
+
+  String get location => GoRouteData.$location(
+        '/play',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $PlayTouchRouteExtension on PlayTouchRoute {
+  static PlayTouchRoute _fromState(GoRouterState state) =>
+      const PlayTouchRoute();
+
+  String get location => GoRouteData.$location(
+        '/play/touch',
       );
 
   void go(BuildContext context) => context.go(location);

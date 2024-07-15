@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aiChat": MessageLookupByLibrary.simpleMessage("AI Chat"),
         "appName": MessageLookupByLibrary.simpleMessage("Eden"),
+        "automatic": MessageLookupByLibrary.simpleMessage("Automatic"),
         "canLoadingText":
             MessageLookupByLibrary.simpleMessage("Release to load more"),
         "clickToTryAgain":
@@ -46,10 +47,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "idleText": MessageLookupByLibrary.simpleMessage("Pull up Load more"),
         "lightTheme": MessageLookupByLibrary.simpleMessage("Light"),
         "loadingText": MessageLookupByLibrary.simpleMessage("Loading..."),
+        "music": MessageLookupByLibrary.simpleMessage("Music"),
         "noDataText": MessageLookupByLibrary.simpleMessage("No more data"),
         "personage": MessageLookupByLibrary.simpleMessage("Personage"),
+        "play": MessageLookupByLibrary.simpleMessage("Play"),
+        "remote": MessageLookupByLibrary.simpleMessage("Remote"),
+        "sound": MessageLookupByLibrary.simpleMessage("Sound"),
         "systemTheme": MessageLookupByLibrary.simpleMessage("System"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
-        "themeMode": MessageLookupByLibrary.simpleMessage("Theme Mode")
+        "themeMode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
+        "touch": MessageLookupByLibrary.simpleMessage("Touch")
       };
 }

@@ -74,6 +74,8 @@ dependencies:
   wechat_camera_picker: any
   jiffy: any
   flutter_blue_plus: ^1.32.8
+  fl_chart: any
+  blur: any
 
 dependency_overrides:
   keyboard_height_plugin:
