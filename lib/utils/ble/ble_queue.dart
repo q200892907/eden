@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
 import 'ble_utils.dart';
 
 enum BleAction {
@@ -69,12 +70,17 @@ class BleQueue {
       _busy = true;
       BleOperate operate = _queue.removeAt(0);
       operate.handle().then((value) {
-        _busy = false;
-        _handleQueue();
+        // 增加了延时操作，避免频繁交互
+        Future.delayed(const Duration(milliseconds: 120), () {
+          _busy = false;
+          _handleQueue();
+        });
       }).onError((error, stackTrace) {
-        _busy = false;
         blePrint(error.toString());
-        _handleQueue();
+        Future.delayed(const Duration(milliseconds: 120), () {
+          _busy = false;
+          _handleQueue();
+        });
       });
     }
   }

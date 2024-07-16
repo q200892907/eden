@@ -1,4 +1,3 @@
-import 'package:eden/uikit/tips/unrealized_tips.dart';
 import 'package:eden/utils/ble/ble_manager_provider.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
@@ -47,19 +46,38 @@ class _BleTestPageState extends ConsumerState<BleTestPage> {
           child: Text(_scanState),
         ),
         ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _scanState = '扫描中';
-              });
-              ref.read(bleDeviceStateProvider.notifier).start().whenComplete(() {
-                if (mounted) {
-                  setState(() {
-                    _scanState = '未开始扫描';
-                  });
-                }
-              });
-            },
-            child: Text('开始扫描')),
+          onPressed: () {
+            setState(() {
+              _scanState = '扫描中';
+            });
+            ref.read(bleDeviceStateProvider.notifier).start().whenComplete(() {
+              if (mounted) {
+                setState(() {
+                  _scanState = '未开始扫描';
+                });
+              }
+            });
+          },
+          child: Text('开始扫描'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _scanState = '开始震动';
+            });
+            ref.read(bleDeviceStateProvider)?.touchActionMotor(100, 375);
+          },
+          child: Text('开始震动'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _scanState = '停止震动';
+            });
+            ref.read(bleDeviceStateProvider)?.stopActionMotor();
+          },
+          child: Text('停止震动'),
+        ),
       ],
     );
   }
