@@ -38,7 +38,8 @@ class BleDevice {
             for (var characteristic in service.characteristics) {
               bool a = characteristic.properties.write;
               bool b = characteristic.properties.read;
-              print('aa: a = $a & b = $b');
+              bool c = characteristic.properties.writeWithoutResponse;
+              print('aa: a = $a & b = $b & c = $c');
               _characteristics[characteristic.uuid.toString()] = characteristic;
             }
           }
@@ -56,9 +57,14 @@ class BleDevice {
     return Future.value(true);
   }
 
-  StreamSubscription<List<int>>? _writeCharacterSubscription;
   BluetoothCharacteristic? _writeCharacter;
-
+  BluetoothCharacteristic? _notifyCharacter;
+  StreamSubscription<List<int>>? _writeCharacterSubscription;
+  StreamSubscription<List<int>>? _notifyCharacterSubscription;
+  BluetoothCharacteristic? _writeCharacter1;
+  BluetoothCharacteristic? _notifyCharacter1;
+  StreamSubscription<List<int>>? _write1CharacterSubscription;
+  StreamSubscription<List<int>>? _notify1CharacterSubscription;
   Timer? _batteryTimer;
 
   void registWriteCharacterListener() {
@@ -67,9 +73,25 @@ class BleDevice {
       _writeCharacter = _characteristics[writeKey];
     }
 
-    // _queue.subscribe(_writeCharacter!, (value) {
-    //   blePrint('device battery subscribe, data = $value');
-    // });
+    final String notifyKey = Guid(CHARACTERISTIC_NOTIFY).toString();
+    if (_characteristics.containsKey(notifyKey)) {
+      _notifyCharacter = _characteristics[notifyKey];
+    }
+
+    final String write1Key = Guid(CHARACTERISTIC_WRITE1).toString();
+    if (_characteristics.containsKey(write1Key)) {
+      _writeCharacter1 = _characteristics[write1Key];
+    }
+
+    final String notify1Key = Guid(CHARACTERISTIC_NOTIFY1).toString();
+    if (_characteristics.containsKey(notify1Key)) {
+      _notifyCharacter1 = _characteristics[notify1Key];
+    }
+
+
+    _queue.subscribe(_writeCharacter!, (value) {
+      blePrint('device battery subscribe, data = $value');
+    });
 
     _writeCharacterSubscription = _writeCharacter!.lastValueStream.listen((event) {
       blePrint('WriteCharacter Receive: $event');
@@ -77,19 +99,40 @@ class BleDevice {
       // ref.read(bleDeviceBatteryProvider.notifier).setState(batteryValue);
       // blePrint('device battery notify, battery = $batteryValue, data = $event');
     });
+
+    _notifyCharacterSubscription = _notifyCharacter!.lastValueStream.listen((event) {
+      blePrint('NotifyCharacter Receive: $event');
+      // final int batteryValue = BleUtils.listToBattery(event);
+      // ref.read(bleDeviceBatteryProvider.notifier).setState(batteryValue);
+      // blePrint('device battery notify, battery = $batteryValue, data = $event');
+    });
+
+    _write1CharacterSubscription = _writeCharacter1!.lastValueStream.listen((event) {
+      blePrint('NotifyCharacter Receive: $event');
+      // final int batteryValue = BleUtils.listToBattery(event);
+      // ref.read(bleDeviceBatteryProvider.notifier).setState(batteryValue);
+      // blePrint('device battery notify, battery = $batteryValue, data = $event');
+    });
+
+    _notify1CharacterSubscription = _notifyCharacter1!.lastValueStream.listen((event) {
+      blePrint('NotifyCharacter Receive: $event');
+      // final int batteryValue = BleUtils.listToBattery(event);
+      // ref.read(bleDeviceBatteryProvider.notifier).setState(batteryValue);
+      // blePrint('device battery notify, battery = $batteryValue, data = $event');
+    });
   }
 
   void initBatteryService() {
-    void executeBatteryTask() {
-      if (_writeCharacter != null) {
-        final List<int> bytes = [0x55, 0x00];
-        _queue.write(_writeCharacter!, bytes);
-      }
-    }
-
-    executeBatteryTask();
-    _batteryTimer = Timer.periodic(const Duration(seconds: 10), (Timer t) => executeBatteryTask);
+    _executeBatteryTask();
+    _batteryTimer = Timer.periodic(const Duration(seconds: 10), (Timer t) => _executeBatteryTask());
     blePrint('device init battery service ${blueDevice.remoteId}');
+  }
+
+  void _executeBatteryTask() {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x0];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
   }
 
   BluetoothCharacteristic? _pressureCharacter;
