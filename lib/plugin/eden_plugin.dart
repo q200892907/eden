@@ -5,6 +5,8 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:eden/config/eden_config.dart';
 import 'package:eden/develop/custom/dio/lib/network_logger.dart';
+import 'package:eden/utils/local_http_service.dart';
+import 'package:eden/utils/music_player.dart';
 import 'package:eden_internet_connection_checker/eden_internet_connection_checker.dart';
 import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_logger/eden_logger.dart';
@@ -55,6 +57,8 @@ class EdenPlugin {
     EdenPermissionUtil.showTips = (tips) {
       EdenToast.show(tips);
     };
+    await LocalHttpService.instance.init();
+    MusicPlayer.instance.scan();
     return Future.value(true);
   }
 

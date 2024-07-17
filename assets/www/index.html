@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Mp3 File</title>
+    <script>
+        function uploadFile() {
+            // 获取文件输入框的文件
+            var file = document.getElementById('fileInput').files[0];
+
+            // 创建FormData对象
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // 创建AJAX请求
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true); // 假设有一个服务端接口 /upload
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    console.log(this.responseText);
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+</head>
+<body>
+<input type="file" id="fileInput" accept=".mp3" />
+<button onclick="uploadFile()">Upload</button>
+</body>
+</html>

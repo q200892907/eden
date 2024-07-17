@@ -7,6 +7,8 @@ import 'package:eden_logger/eden_logger.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:video_player_media_kit/video_player_media_kit.dart';
 
 import 'develop/custom/error/eden_error_tool.dart';
 import 'eden_app.dart';
@@ -38,6 +40,11 @@ class MyHttpOverrides extends HttpOverrides {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
+  VideoPlayerMediaKit.ensureInitialized(
+    android: true,
+    iOS: true,
+  );
   HttpOverrides.global = MyHttpOverrides();
 
   // 初始化应用配置
