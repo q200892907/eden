@@ -1,4 +1,5 @@
 import 'package:eden/utils/ble/ble_manager_provider.dart';
+import 'package:eden/utils/function_proxy.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,7 @@ class _BleTestPageState extends ConsumerState<BleTestPage> {
               _scanState = '触控模式-震动';
             });
             ref.read(bleDeviceStateProvider)?.touchActionMotor(100, 375);
-          },
+          }.throttleWithTimeout(timeout: 120),
           child: const Text('触控模式-震动'),
         ),
         ElevatedButton(

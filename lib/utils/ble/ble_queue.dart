@@ -70,17 +70,12 @@ class BleQueue {
       _busy = true;
       BleOperate operate = _queue.removeAt(0);
       operate.handle().then((value) {
-        // 增加了延时操作，避免频繁交互
-        Future.delayed(const Duration(milliseconds: 120), () {
-          _busy = false;
-          _handleQueue();
-        });
+        _busy = false;
+        _handleQueue();
       }).onError((error, stackTrace) {
         blePrint(error.toString());
-        Future.delayed(const Duration(milliseconds: 120), () {
-          _busy = false;
-          _handleQueue();
-        });
+        _busy = false;
+        _handleQueue();
       });
     }
   }
