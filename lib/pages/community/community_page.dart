@@ -58,25 +58,61 @@ class _BleTestPageState extends ConsumerState<BleTestPage> {
               }
             });
           },
-          child: Text('开始扫描'),
+          child: const Text('开始扫描'),
         ),
         ElevatedButton(
           onPressed: () {
             setState(() {
-              _scanState = '开始震动';
+              _scanState = '触控模式-震动';
             });
             ref.read(bleDeviceStateProvider)?.touchActionMotor(100, 375);
           },
-          child: Text('开始震动'),
+          child: const Text('触控模式-震动'),
         ),
         ElevatedButton(
           onPressed: () {
             setState(() {
-              _scanState = '停止震动';
+              _scanState = '停止触控震动';
             });
             ref.read(bleDeviceStateProvider)?.stopActionMotor();
           },
-          child: Text('停止震动'),
+          child: const Text('停止触控震动'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _scanState = '震动模式-模式3、强度10';
+            });
+            ref.read(bleDeviceStateProvider)?.modeMotor(3, 10);
+          },
+          child: const Text('震动模式-模式3、强度10'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _scanState = '停止震动模式';
+            });
+            ref.read(bleDeviceStateProvider)?.stopModeMotor();
+          },
+          child: const Text('停止震动模式'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _scanState = '吮吸模式-模式2';
+            });
+            ref.read(bleDeviceStateProvider)?.suckMotor(2);
+          },
+          child: const Text('吮吸模式-模式2'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _scanState = '停止吮吸模式';
+            });
+            ref.read(bleDeviceStateProvider)?.stopSuckMotor();
+          },
+          child: const Text('停止吮吸模式'),
         ),
       ],
     );

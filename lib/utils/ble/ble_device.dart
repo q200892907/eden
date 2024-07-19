@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -119,10 +119,62 @@ class BleDevice {
     }
   }
 
-  /// 交互类震动——滑屏
-  void touchActionMotor(int touchY, int height) {
+  /// 模式类震动
+  ///
+  /// [mode] 模式，取值1~10
+  /// [strong] 强度，取值1~10
+  void modeMotor(int mode, int strong) {
+    assert(mode >= 1 && mode <= 10, 'mode 必须在 1 到 10 之间');
+    assert(strong >= 1 && strong <= 10, 'strong 必须在 1 到 10 之间');
     if (_writeCharacter != null) {
-      final List<int> bytes = [0x55, 0x04, motorNum & 0xff, 0x0, 0x0, (touchY / height * 255).round() & 0xff, 0xAA];
+      final List<int> bytes = [0x55, 0x3, motorNum & 0xff, 0x0, mode & 0xff, strong & 0xff];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
+
+  /// 停止模式类震动
+  void stopModeMotor() {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x3, 0x0, 0x0, 0x0, 0x0];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
+
+  /// 交互类震动——滑屏
+  ///
+  /// [touchY] Y坐标
+  /// [height] 控件高度
+  void touchActionMotor(num touchY, num height) {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, (touchY / height * 255).round() & 0xff, 0xAA];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
+
+  /// 交互类震动——滑屏——暴走模式
+  void rampageActionMotor() {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, 0xff, 0xAA];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
+
+  /// 交互类震动——音乐模式
+  ///
+  /// [pcm] PCM数据
+  void musicMotor(num pcm) {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, min((pcm * 255).round(), 255) & 0xff, 0xAA];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
+
+  /// 交互类震动——声音模式
+  ///
+  /// [dbValue] 声音数据
+  void soundMotor(num dbValue) {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, (dbValue / 15 * 255).round() & 0xff, 0xAA];
       _queue.write(_writeCharacter!, bytes, noRsp: true);
     }
   }
@@ -130,13 +182,29 @@ class BleDevice {
   /// 停止交互类震动
   void stopActionMotor() {
     if (_writeCharacter != null) {
-      final List<int> bytes = [0x55, 0x04, motorNum & 0xff, 0x0, 0x0, 0x0, 0xAA];
+      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, 0x0, 0xAA];
       _queue.write(_writeCharacter!, bytes, noRsp: true);
     }
   }
 
+  /// 吮吸模式
+  ///
+  /// [mode] 模式，取值1~10
+  void suckMotor(int mode) {
+    assert(mode >= 1 && mode <= 10, 'mode 必须在 1 到 10 之间');
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x9, 0x0, 0x0, mode & 0xff, 0x0];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
 
-
+  /// 停止吮吸模式
+  void stopSuckMotor() {
+    if (_writeCharacter != null) {
+      final List<int> bytes = [0x55, 0x9, 0x0, 0x0, 0x0, 0x0];
+      _queue.write(_writeCharacter!, bytes, noRsp: true);
+    }
+  }
 
   //
   // BluetoothCharacteristic? _pressureCharacter;
