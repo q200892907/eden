@@ -82,6 +82,7 @@ dependencies:
   media_kit: any
   media_kit_video: any
   media_kit_libs_video: any
+  web_socket_client: any
 dependency_overrides:
   keyboard_height_plugin:
     git: https://github.com/q200892907/keyboard_height_plugin.git
