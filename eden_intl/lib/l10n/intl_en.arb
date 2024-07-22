@@ -26,5 +26,7 @@
   "automatic": "Automatic",
   "sound": "Sound",
   "music": "Music",
-  "remote": "Remote"
+  "remote": "Remote",
+  "suckingMode": "Sucking mode",
+  "vibrationMode": "Vibration mode"
 }

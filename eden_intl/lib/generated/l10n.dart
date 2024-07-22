@@ -319,6 +319,26 @@ class EdenStrings {
       args: [],
     );
   }
+
+  /// `Sucking mode`
+  String get suckingMode {
+    return Intl.message(
+      'Sucking mode',
+      name: 'suckingMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vibration mode`
+  String get vibrationMode {
+    return Intl.message(
+      'Vibration mode',
+      name: 'vibrationMode',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<EdenStrings> {

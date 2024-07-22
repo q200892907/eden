@@ -53,9 +53,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "play": MessageLookupByLibrary.simpleMessage("Play"),
         "remote": MessageLookupByLibrary.simpleMessage("Remote"),
         "sound": MessageLookupByLibrary.simpleMessage("Sound"),
+        "suckingMode": MessageLookupByLibrary.simpleMessage("Sucking mode"),
         "systemTheme": MessageLookupByLibrary.simpleMessage("System"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "themeMode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
-        "touch": MessageLookupByLibrary.simpleMessage("Touch")
+        "touch": MessageLookupByLibrary.simpleMessage("Touch"),
+        "vibrationMode": MessageLookupByLibrary.simpleMessage("Vibration mode")
       };
 }

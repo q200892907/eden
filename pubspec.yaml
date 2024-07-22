@@ -98,6 +98,7 @@ dev_dependencies:
   freezed: any
   riverpod_generator: any
   riverpod_lint: any
+  watcher: ^1.1.0
 # flutter中相关配置
 flutter:
   uses-material-design: true

@@ -178,6 +178,10 @@ RouteBase get $playRoute => GoRouteData.$route(
           path: 'touch',
           factory: $PlayTouchRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: 'auto',
+          factory: $PlayAutoRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -204,6 +208,23 @@ extension $PlayTouchRouteExtension on PlayTouchRoute {
 
   String get location => GoRouteData.$location(
         '/play/touch',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $PlayAutoRouteExtension on PlayAutoRoute {
+  static PlayAutoRoute _fromState(GoRouterState state) => const PlayAutoRoute();
+
+  String get location => GoRouteData.$location(
+        '/play/auto',
       );
 
   void go(BuildContext context) => context.go(location);

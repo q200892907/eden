@@ -21,6 +21,7 @@ class EdenRouter {
 
   static const String play = '/play'; //玩模式
   static const String touch = 'touch'; //手势
+  static const String auto = 'auto'; //自动模式
 
   static final GlobalKey<NavigatorState> _navKey = GlobalKey<NavigatorState>();
 

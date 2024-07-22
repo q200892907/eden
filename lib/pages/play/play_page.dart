@@ -24,7 +24,9 @@ class _PlayPageState extends State<PlayPage> {
       ),
       PlayModeItem(
         title: context.strings.automatic,
-        onTap: () {},
+        onTap: () {
+          const PlayAutoRoute().push(context);
+        },
       ),
       PlayModeItem(
         title: context.strings.sound,

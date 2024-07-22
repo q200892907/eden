@@ -6,7 +6,7 @@ part of 'ble_manager_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bleStateHash() => r'1f9ed7fb273a607d2e7c0f8840bf4e96987ba325';
+String _$bleStateHash() => r'da6b48cb57a6d6daebe634dcc60aab0037051f16';
 
 ///
 /// 蓝牙管理相关Provider
@@ -27,7 +27,7 @@ final bleStateProvider =
 );
 
 typedef _$BleState = Notifier<BluetoothAdapterState>;
-String _$bleDeviceStateHash() => r'150d408beb9d1ede4d8e833d17a13d78a96d1ffa';
+String _$bleDeviceStateHash() => r'fecde3072ef102628f5387ee5286b3f13ba5322f';
 
 /// See also [BleDeviceState].
 @ProviderFor(BleDeviceState)
