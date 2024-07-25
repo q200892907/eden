@@ -1,3 +1,4 @@
+import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden/utils/ble/ble_manager_provider.dart';
 import 'package:eden/utils/function_proxy.dart';
 import 'package:eden_uikit/eden_uikit.dart';
@@ -8,7 +9,7 @@ class CommunityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const BleTestPage();
+    return const EdenBackground(child: BleTestPage());
     // return const UnrealizedTips(name: 'Community');
   }
 }

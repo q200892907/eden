@@ -4,8 +4,8 @@ import 'package:eden/utils/music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-class AudioView extends StatelessWidget {
-  const AudioView({super.key});
+class EdenAudioView extends StatelessWidget {
+  const EdenAudioView({super.key});
 
   @override
   Widget build(BuildContext context) {

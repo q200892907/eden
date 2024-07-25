@@ -1,4 +1,5 @@
 import 'package:eden/providers/eden_user_provider.dart';
+import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +15,15 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: OutlinedButton(
-          onPressed: () {
-            _login();
-          },
-          child: Text('登录'),
+    return EdenBackground(
+      child: Scaffold(
+        body: Center(
+          child: OutlinedButton(
+            onPressed: () {
+              _login();
+            },
+            child: Text('登录'),
+          ),
         ),
       ),
     );

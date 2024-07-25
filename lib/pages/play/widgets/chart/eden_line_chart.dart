@@ -63,7 +63,7 @@ class _EdenLineChartState extends State<EdenLineChart>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xff080709).withOpacity(0.5),
+      color: Colors.transparent,
       height: 167.w,
       child: Stack(
         children: [
@@ -93,8 +93,8 @@ class _EdenLineChartState extends State<EdenLineChart>
             bottom: 56.w,
             child: LineChart(
               _buildLineChartData(
-                const Color(0xffFF47B5),
-                const Color(0xffFF47B5).withOpacity(0.3),
+                context.theme.primary,
+                context.theme.primary.withOpacity(0.3),
               ),
             ),
           ),
@@ -137,17 +137,22 @@ class _EdenLineChartState extends State<EdenLineChart>
                       TextSpan(
                         text: '',
                         children: [
+                          if (!widget.isOnlyShow)
+                            TextSpan(
+                                text:
+                                    '${(_animation.value * widget.chart.totalTime / 1000).toStringAsFixed(1)}\' ',
+                                style: 16.sp.ts.bold.primary(context)),
+                          if (!widget.isOnlyShow)
+                            TextSpan(
+                                text: ' / ',
+                                style: 16
+                                    .sp
+                                    .ts
+                                    .bold
+                                    .copyWith(color: const Color(0xffb8a9a9))),
                           TextSpan(
                               text:
-                                  '${(_animation.value * widget.chart.totalTime / 1000).toStringAsFixed(1)}\' ',
-                              style: 16
-                                  .sp
-                                  .ts
-                                  .bold
-                                  .copyWith(color: const Color(0xffFF47B5))),
-                          TextSpan(
-                              text:
-                                  ' / ${(widget.chart.totalTime / 1000).toStringAsFixed(1)}\'',
+                                  '${(widget.chart.totalTime / 1000).toStringAsFixed(1)}\'',
                               style: 16
                                   .sp
                                   .ts

@@ -3,11 +3,8 @@ import 'dart:math';
 
 import 'package:eden/entities/toy_command_entity.dart';
 import 'package:eden/utils/vibration_utils.dart';
-import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
-
-const int _addTime = 2;
 
 class EdenPlayGestureLinesNotifier
     extends ValueNotifier<List<List<ToyRoomCommandOffsetEntity>>> {
@@ -16,40 +13,9 @@ class EdenPlayGestureLinesNotifier
   void update(List<List<ToyRoomCommandOffsetEntity>> lines) {
     value = lines;
   }
-}
 
-class EdenPlayGestureNotifier extends ValueNotifier<bool> {
-  EdenPlayGestureNotifier() : super(false);
-
-  int _time = 0;
-  Timer? _timer;
-
-  int get time => _time;
-
-  void start(int num) {
-    if (_time != num) {
-      _time = num + _addTime;
-    }
-    value = _time != 0;
-    if (value) {
-      _startTimer();
-    }
-  }
-
-  void _startTimer() {
-    _timer ??= Timer(
-      Duration(seconds: _time),
-      () {
-        stop();
-      },
-    );
-  }
-
-  void stop() {
-    _time = 0;
-    value = false;
-    _timer?.cancel();
-    _timer = null;
+  void reset() {
+    value = [];
   }
 }
 
@@ -60,14 +26,14 @@ class EdenPlayGestureDetector extends StatefulWidget {
   const EdenPlayGestureDetector({
     super.key,
     required this.onChanged,
-    required this.notifier,
+    required this.onStart,
     required this.onEnd,
     required this.linesNotifier,
   });
 
   final OnEdenPlayGestureChanged onChanged; //List长度为2
-  final EdenPlayGestureNotifier notifier;
   final EdenPlayGestureLinesNotifier linesNotifier;
+  final VoidCallback onStart;
   final VoidCallback onEnd;
 
   @override
@@ -76,15 +42,14 @@ class EdenPlayGestureDetector extends StatefulWidget {
 
 class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
   Timer? _timer;
-  Timer? _tipsTimer;
   final _LineNotifier _lineNotifier = _LineNotifier();
-  final ValueNotifier<bool> _tips = ValueNotifier(false);
 
   Map<int, List<PointerEvent>> get _points => _lineNotifier.value;
 
   /// 200毫秒回调一次，减少刷新时间
   DateTime? _callbackTime;
   final int _callbackInterval = 50;
+  late Size _size;
 
   @override
   void initState() {
@@ -97,7 +62,6 @@ class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
     super.dispose();
     _callbackTime = null;
     _stopTimer();
-    _stopTipsTimer();
   }
 
   void _startTimer() {
@@ -111,100 +75,58 @@ class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
     _timer = null;
   }
 
-  void _startTipsTimer() {
-    _tips.value = true;
-    _tipsTimer ??= Timer(const Duration(seconds: _addTime), () {
-      _stopTipsTimer();
-    });
-  }
-
-  void _stopTipsTimer() {
-    _tips.value = false;
-    _tipsTimer?.cancel();
-    _tipsTimer = null;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: widget.notifier,
-      builder: (_, value, child) {
-        if (!value) {
-          widget.onEnd.call();
-        }
-        if (value) {
-          _startTipsTimer();
-        }
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned.fill(
-              child: Offstage(
-                offstage: !value,
-                child: child,
+    return LayoutBuilder(builder: (context, constraints) {
+      _size = constraints.biggest;
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned.fill(
+            child: Listener(
+              onPointerDown: (event) {
+                _start(event);
+              },
+              onPointerMove: (event) {
+                _move(event);
+              },
+              onPointerUp: (event) {
+                _end(event);
+              },
+              onPointerCancel: (event) {
+                _end(event);
+              },
+              child: ValueListenableBuilder<Map<int, List<PointerEvent>>>(
+                valueListenable: _lineNotifier,
+                builder: (context, value, child) {
+                  return CustomPaint(
+                    painter: LinePainter(
+                      pointsMap: _lineNotifier.lines,
+                    ),
+                    size: Size.infinite,
+                  );
+                },
               ),
             ),
-            ValueListenableBuilder(
-                valueListenable: widget.linesNotifier,
-                builder: (context, value, child) {
-                  return Visibility(
-                    visible: value.isNotEmpty,
-                    child: Positioned.fill(
-                      child: CustomPaint(
-                        painter: LinePainter(
-                          pointsMap: value,
-                        ),
-                        size: Size.infinite,
+          ),
+          ValueListenableBuilder(
+              valueListenable: widget.linesNotifier,
+              builder: (context, value, child) {
+                return Visibility(
+                  visible: value.isNotEmpty,
+                  child: Positioned.fill(
+                    child: CustomPaint(
+                      painter: LinePainter(
+                        pointsMap: value,
                       ),
+                      size: Size.infinite,
                     ),
-                  );
-                }),
-            ValueListenableBuilder(
-                valueListenable: _tips,
-                builder: (context, value, child) {
-                  return Visibility(
-                    visible: value,
-                    child: Positioned.fill(
-                      child: Center(
-                        child: DefaultTextStyle(
-                          style: 40.spts,
-                          child: FadeIn(
-                            child: Text(context.strings.play), //todo
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ],
-        );
-      },
-      child: Listener(
-        onPointerDown: (event) {
-          _start(event);
-        },
-        onPointerMove: (event) {
-          _move(event);
-        },
-        onPointerUp: (event) {
-          _end(event);
-        },
-        onPointerCancel: (event) {
-          _end(event);
-        },
-        child: ValueListenableBuilder<Map<int, List<PointerEvent>>>(
-          valueListenable: _lineNotifier,
-          builder: (context, value, child) {
-            return CustomPaint(
-              painter: LinePainter(
-                pointsMap: _lineNotifier.lines,
-              ),
-              size: Size.infinite,
-            );
-          },
-        ),
-      ),
-    );
+                  ),
+                );
+              }),
+        ],
+      );
+    });
   }
 
   void _end(PointerEvent event) {
@@ -218,6 +140,7 @@ class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
   }
 
   void _start(PointerEvent event) {
+    widget.onStart.call();
     _lineNotifier.start(event);
     _callback();
   }
@@ -233,31 +156,25 @@ class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
     VibrationUtils.cancel();
     if (end || _points.isEmpty) {
       widget.onChanged([0, 0], []);
+      widget.onEnd.call();
     } else {
-      Offset? offset;
-      _points.forEach((key, value) {
-        if (value.isNotEmpty) {
-          if (offset != null) {
-            if (value.last.delta.distance > offset!.distance) {
-              offset = value.last.delta;
-            }
-          } else {
-            offset = value.last.delta;
-          }
-        }
-      });
-      int vibrate = _points.values.last.last.delta.vibrate;
+      int vibrate = _points.values.last.last.vibrate(_size.height);
       int mobileVibrate = 255 * vibrate ~/ 100;
       if (_points.length == 1) {
         widget.onChanged([vibrate, vibrate], _lineNotifier.lines);
       } else {
         widget.onChanged([
           vibrate,
-          _points.values.toList()[_points.values.length - 2].last.delta.vibrate
+          _points.values
+              .toList()[_points.values.length - 2]
+              .last
+              .vibrate(_size.height)
         ], _lineNotifier.lines);
       }
       VibrationUtils.vibrate(
-          amplitude: mobileVibrate, duration: _callbackInterval);
+        amplitude: mobileVibrate,
+        duration: _callbackInterval,
+      );
     }
   }
 }
@@ -313,7 +230,7 @@ class LinePainter extends CustomPainter {
   final List<List<ToyRoomCommandOffsetEntity>> pointsMap;
   final double radius;
   final startColor = EdenThemeBuilder.theme.primary;
-  final endColor = const Color(0xffFF47B5);
+  final endColor = EdenThemeBuilder.theme.primary.withOpacity(0.2);
 
   LinePainter({
     required this.pointsMap,
@@ -350,12 +267,10 @@ class LinePainter extends CustomPainter {
   bool shouldRepaint(LinePainter oldDelegate) => true;
 }
 
-extension OffsetDragTrailExtension on Offset {
-  static const double _max = 15;
-
-  int get vibrate {
-    double d = min(distance, _max);
-    return (d / _max * 100).toInt();
+extension on PointerEvent {
+  int vibrate(double height) {
+    num d = 1 - localPosition.dy / height;
+    return ((max(0.0, min(1.0, d))) * 100).toInt();
   }
 }
 

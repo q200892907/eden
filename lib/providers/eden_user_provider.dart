@@ -1,3 +1,4 @@
+import 'package:eden/utils/chart_util.dart';
 import 'package:eden_database/eden_database.dart';
 import 'package:eden_service/eden_service.dart';
 import 'package:eden_uikit/eden_uikit.dart';
@@ -50,7 +51,9 @@ class EdenUserNotifier extends _$EdenUserNotifier {
   }
 
   /// 处理绑定操作、连接操作
-  void _handle() {}
+  void _handle() {
+    ChartUtil.instance.init(state?.id ?? '');
+  }
 
   /// 退出逻辑
   Future<bool> logout(BuildContext context) async {

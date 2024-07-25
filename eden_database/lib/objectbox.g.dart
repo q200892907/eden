@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'objectbox/account/eden_obx_account.dart';
+import 'objectbox/chart/eden_obx_chart.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -49,6 +50,75 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(5, 7186994607224751380),
             name: 'refreshToken',
             type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(2, 4283029903689053060),
+      name: 'EdenObxChart',
+      lastPropertyId: const obx_int.IdUid(5, 4136802877399516803),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 6518038503634663233),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 727718324242666624),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 799211712541979245),
+            name: 'createTime',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 492166248012235623),
+            name: 'totalTime',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 4136802877399516803),
+            name: 'userId',
+            type: 9,
+            flags: 8,
+            indexId: const obx_int.IdUid(2, 855168651216924021))
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[
+        obx_int.ModelBacklink(
+            name: 'points', srcEntity: 'EdenObxChartPoint', srcField: 'chart')
+      ]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(3, 8914958207139514850),
+      name: 'EdenObxChartPoint',
+      lastPropertyId: const obx_int.IdUid(4, 5167563224216442271),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 1000531839929018509),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 1224825486787627545),
+            name: 'chartId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(1, 5555897402605835698),
+            relationTarget: 'EdenObxChart'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 3833268677113240047),
+            name: 'time',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 5167563224216442271),
+            name: 'y',
+            type: 6,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -90,14 +160,14 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(1, 941696749703026554),
-      lastIndexId: const obx_int.IdUid(0, 0),
-      lastRelationId: const obx_int.IdUid(0, 0),
+      lastEntityId: const obx_int.IdUid(3, 8914958207139514850),
+      lastIndexId: const obx_int.IdUid(2, 855168651216924021),
+      lastRelationId: const obx_int.IdUid(1, 6323252260919270659),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
       retiredPropertyUids: const [],
-      retiredRelationUids: const [],
+      retiredRelationUids: const [6323252260919270659],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -147,6 +217,92 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isLogin: isLoginParam);
 
           return object;
+        }),
+    EdenObxChart: obx_int.EntityDefinition<EdenObxChart>(
+        model: _entities[1],
+        toOneRelations: (EdenObxChart object) => [],
+        toManyRelations: (EdenObxChart object) => {
+              obx_int.RelInfo<EdenObxChartPoint>.toOneBacklink(2, object.id,
+                      (EdenObxChartPoint srcObject) => srcObject.chart):
+                  object.points
+            },
+        getId: (EdenObxChart object) => object.id,
+        setId: (EdenObxChart object, int id) {
+          object.id = id;
+        },
+        objectToFB: (EdenObxChart object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          final userIdOffset = fbb.writeString(object.userId);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addInt64(2, object.createTime.millisecondsSinceEpoch);
+          fbb.addInt64(3, object.totalTime);
+          fbb.addOffset(4, userIdOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final userIdParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 12, '');
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final createTimeParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
+          final totalTimeParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          final pointsParam = obx.ToMany<EdenObxChartPoint>();
+          final object = EdenObxChart(
+              id: idParam,
+              userId: userIdParam,
+              name: nameParam,
+              createTime: createTimeParam,
+              totalTime: totalTimeParam,
+              points: pointsParam);
+          obx_int.InternalToManyAccess.setRelInfo<EdenObxChart>(
+              object.points,
+              store,
+              obx_int.RelInfo<EdenObxChartPoint>.toOneBacklink(2, object.id,
+                  (EdenObxChartPoint srcObject) => srcObject.chart));
+          return object;
+        }),
+    EdenObxChartPoint: obx_int.EntityDefinition<EdenObxChartPoint>(
+        model: _entities[2],
+        toOneRelations: (EdenObxChartPoint object) => [object.chart],
+        toManyRelations: (EdenObxChartPoint object) => {},
+        getId: (EdenObxChartPoint object) => object.id,
+        setId: (EdenObxChartPoint object, int id) {
+          object.id = id;
+        },
+        objectToFB: (EdenObxChartPoint object, fb.Builder fbb) {
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.chart.targetId);
+          fbb.addInt64(2, object.time);
+          fbb.addInt64(3, object.y);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final chartParam = obx.ToOne<EdenObxChart>(
+              targetId:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0));
+          final timeParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          final yParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          final object = EdenObxChartPoint(
+              id: idParam, chart: chartParam, time: timeParam, y: yParam);
+          object.chart.attach(store);
+          return object;
         })
   };
 
@@ -174,4 +330,51 @@ class EdenObxAccount_ {
   /// See [EdenObxAccount.refreshToken].
   static final refreshToken =
       obx.QueryStringProperty<EdenObxAccount>(_entities[0].properties[4]);
+}
+
+/// [EdenObxChart] entity fields to define ObjectBox queries.
+class EdenObxChart_ {
+  /// See [EdenObxChart.id].
+  static final id =
+      obx.QueryIntegerProperty<EdenObxChart>(_entities[1].properties[0]);
+
+  /// See [EdenObxChart.name].
+  static final name =
+      obx.QueryStringProperty<EdenObxChart>(_entities[1].properties[1]);
+
+  /// See [EdenObxChart.createTime].
+  static final createTime =
+      obx.QueryDateProperty<EdenObxChart>(_entities[1].properties[2]);
+
+  /// See [EdenObxChart.totalTime].
+  static final totalTime =
+      obx.QueryIntegerProperty<EdenObxChart>(_entities[1].properties[3]);
+
+  /// See [EdenObxChart.userId].
+  static final userId =
+      obx.QueryStringProperty<EdenObxChart>(_entities[1].properties[4]);
+
+  /// see [EdenObxChart.points]
+  static final points =
+      obx.QueryBacklinkToMany<EdenObxChartPoint, EdenObxChart>(
+          EdenObxChartPoint_.chart);
+}
+
+/// [EdenObxChartPoint] entity fields to define ObjectBox queries.
+class EdenObxChartPoint_ {
+  /// See [EdenObxChartPoint.id].
+  static final id =
+      obx.QueryIntegerProperty<EdenObxChartPoint>(_entities[2].properties[0]);
+
+  /// See [EdenObxChartPoint.chart].
+  static final chart = obx.QueryRelationToOne<EdenObxChartPoint, EdenObxChart>(
+      _entities[2].properties[1]);
+
+  /// See [EdenObxChartPoint.time].
+  static final time =
+      obx.QueryIntegerProperty<EdenObxChartPoint>(_entities[2].properties[2]);
+
+  /// See [EdenObxChartPoint.y].
+  static final y =
+      obx.QueryIntegerProperty<EdenObxChartPoint>(_entities[2].properties[3]);
 }

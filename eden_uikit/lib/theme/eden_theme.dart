@@ -12,7 +12,7 @@ const edenLightTheme = EdenTheme(
   background: Color(0xffffffff),
   barrierColor: Color(0x33000000),
   customHoverColor: Color(0x0f000000),
-  primary: Color(0xffC58EFF),
+  primary: Color(0xffD884FF),
   danger: Color(0xffff3141),
   success: Color(0xFF00b578),
   warning: Color(0xFFffaf37),
@@ -41,7 +41,7 @@ const edenDarkTheme = EdenTheme(
   background: Color(0xff1a1a1a),
   barrierColor: Color(0x40000000),
   customHoverColor: Color(0x1affffff),
-  primary: Color(0xffC58EFF),
+  primary: Color(0xffD884FF),
   danger: Color(0xffff3141),
   success: Color(0xFF00b578),
   warning: Color(0xFFffaf37),
@@ -183,6 +183,7 @@ extension EdenThemeExt on EdenTheme {
       useMaterial3: true,
     ).copyWith(
       extensions: [this],
+      scaffoldBackgroundColor: Colors.transparent,
     );
   }
 }

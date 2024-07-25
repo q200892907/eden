@@ -35,6 +35,7 @@ export 'ui/riverpod/eden_riverpod.dart';
 export 'ui/safe/eden_bottom_safe_area.dart';
 export 'ui/scroll/eden_scroll_configuration.dart';
 export 'ui/state/widgets_binding_mixin.dart';
+export 'ui/text/eden_max_scale_text.dart';
 export 'ui/toast/eden_toast.dart';
 
 class EdenUikit extends StatefulWidget {

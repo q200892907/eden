@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eden_database/objectbox.g.dart';
 import 'package:eden_database/objectbox/account/eden_obx_account.dart';
+import 'package:eden_database/objectbox/chart/eden_obx_chart.dart';
 import 'package:eden_logger/eden_logger.dart';
 import 'package:eden_service/eden_service.dart';
 import 'package:eden_utils/eden_utils.dart';
@@ -10,6 +11,8 @@ import 'package:path_provider/path_provider.dart';
 
 export 'account/eden_obx_account.dart';
 export 'account/eden_obx_account_extension.dart';
+export 'chart/eden_obx_chart.dart';
+export 'chart/eden_obx_chart_extension.dart';
 
 /// objectbox用户相关信息的实现
 class EdenObjectBox {
@@ -40,6 +43,8 @@ class EdenObjectBox {
   Store? _store; // 主数据Store
 
   late Box<EdenObxAccount> accountBox; //用户信息box
+  late Box<EdenObxChart> chartBox;
+  late Box<EdenObxChartPoint> chartPointBox;
 
   void _log(Object object) {
     EdenLogger.d('$runtimeType@$hashCode - $object');
@@ -112,6 +117,8 @@ class EdenObjectBox {
     _log('数据库打开成功');
     // 数据库存在，则初始化各box
     accountBox = Box<EdenObxAccount>(_store!);
+    chartBox = Box<EdenObxChart>(_store!);
+    chartPointBox = Box<EdenObxChartPoint>(_store!);
     _isInit = true;
     return true;
   }

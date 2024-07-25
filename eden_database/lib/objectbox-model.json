@@ -36,17 +36,87 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "2:4283029903689053060",
+      "lastPropertyId": "5:4136802877399516803",
+      "name": "EdenObxChart",
+      "properties": [
+        {
+          "id": "1:6518038503634663233",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:727718324242666624",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:799211712541979245",
+          "name": "createTime",
+          "type": 10
+        },
+        {
+          "id": "4:492166248012235623",
+          "name": "totalTime",
+          "type": 6
+        },
+        {
+          "id": "5:4136802877399516803",
+          "name": "userId",
+          "type": 9,
+          "flags": 8,
+          "indexId": "2:855168651216924021"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8914958207139514850",
+      "lastPropertyId": "4:5167563224216442271",
+      "name": "EdenObxChartPoint",
+      "properties": [
+        {
+          "id": "1:1000531839929018509",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1224825486787627545",
+          "name": "chartId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:5555897402605835698",
+          "relationTarget": "EdenObxChart"
+        },
+        {
+          "id": "3:3833268677113240047",
+          "name": "time",
+          "type": 6
+        },
+        {
+          "id": "4:5167563224216442271",
+          "name": "y",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "1:941696749703026554",
-  "lastIndexId": "0:0",
-  "lastRelationId": "0:0",
+  "lastEntityId": "3:8914958207139514850",
+  "lastIndexId": "2:855168651216924021",
+  "lastRelationId": "1:6323252260919270659",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    6323252260919270659
+  ],
   "version": 1
 }

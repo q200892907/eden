@@ -86,7 +86,6 @@ class _RootPageState extends ConsumerState<RootPage>
     ];
     _getCurrentIndex(context);
     return Scaffold(
-      backgroundColor: context.theme.background,
       body: widget.navigationShell,
       bottomNavigationBar: ValueListenableBuilder(
         valueListenable: _mobileNavNotifier,

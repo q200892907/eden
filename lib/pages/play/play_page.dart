@@ -1,6 +1,8 @@
 import 'package:eden/pages/play/widgets/items/play_mode_item.dart';
 import 'package:eden/router/common/play/eden_play_router.dart';
 import 'package:eden/router/eden_router.dart';
+import 'package:eden/uikit/appbar/eden_gradient_app_bar.dart';
+import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
@@ -41,30 +43,32 @@ class _PlayPageState extends State<PlayPage> {
         onTap: () {},
       )
     ];
-    return Scaffold(
-      appBar: EdenAppBar(
-        title: context.strings.play,
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 22.w),
-            sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (_, index) {
-                  return children[index];
-                },
-                childCount: children.length,
+    return EdenBackground(
+      child: Scaffold(
+        appBar: EdenGradientAppBar(
+          title: context.strings.play,
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 22.w),
+              sliver: SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (_, index) {
+                    return children[index];
+                  },
+                  childCount: children.length,
+                ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 20.w,
+                  crossAxisSpacing: 12.w,
+                  childAspectRatio: 166 / 140,
+                ),
               ),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 20.w,
-                crossAxisSpacing: 12.w,
-                childAspectRatio: 166 / 140,
-              ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

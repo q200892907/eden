@@ -6,6 +6,7 @@ import 'package:eden/eden_app.dart';
 import 'package:eden/plugin/eden_plugin.dart';
 import 'package:eden/providers/eden_user_provider.dart';
 import 'package:eden/router/eden_routes.dart';
+import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
 
@@ -42,9 +43,10 @@ class _SplashPageState extends ConsumerState<SplashPage> with EdenDevelopMixin {
   @override
   Widget build(BuildContext context) {
     appContext = context;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _buildBody(),
+    return EdenBackground(
+      child: Scaffold(
+        body: _buildBody(),
+      ),
     );
   }
 

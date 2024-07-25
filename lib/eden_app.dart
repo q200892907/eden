@@ -47,11 +47,13 @@ class _EdenAppState extends ConsumerState<EdenApp> {
                 scrollBehavior: const EdenScrollBehavior(),
                 builder: EdenLoading.init(
                   builder: (_, child) {
-                    return AnimatedTheme(
-                      duration: const Duration(milliseconds: 1),
-                      curve: Curves.easeOut,
-                      data: Theme.of(_),
-                      child: child!,
+                    return EdenMaxScaleText(
+                      child: AnimatedTheme(
+                        duration: const Duration(milliseconds: 1),
+                        curve: Curves.easeOut,
+                        data: Theme.of(_),
+                        child: child!,
+                      ),
                     );
                   },
                 ),

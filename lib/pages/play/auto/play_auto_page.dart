@@ -1,3 +1,5 @@
+import 'package:eden/uikit/appbar/eden_gradient_app_bar.dart';
+import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
@@ -45,28 +47,31 @@ class _PlayAutoPageState extends State<PlayAutoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: EdenAppBar(
-        title: context.strings.automatic,
-      ),
-      body: Column(
-        children: [
-          Container(
-            width: 1.sw,
-            height: 137.w,
-            margin: EdgeInsets.symmetric(horizontal: 16.w),
-            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16.w))),
-            child: const Placeholder(),
-          ),
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                ..._buildSuckMode(),
-                ..._buildVibrationMode(),
-              ],
+    return EdenBackground(
+      child: Scaffold(
+        appBar: EdenGradientAppBar(
+          title: context.strings.automatic,
+        ),
+        body: Column(
+          children: [
+            Container(
+              width: 1.sw,
+              height: 137.w,
+              margin: EdgeInsets.symmetric(horizontal: 16.w),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(16.w))),
+              child: const Placeholder(),
             ),
-          ),
-        ],
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  ..._buildSuckMode(),
+                  ..._buildVibrationMode(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -131,7 +136,10 @@ class _PlayAutoPageState extends State<PlayAutoPage> {
   ///
   /// [index] 标题位置，0：吮吸模式；1.震动模式
   /// [playing] 是否正在播放
-  Widget _buildTitleTile({required String text, required bool playing, required VoidCallback onTap}) {
+  Widget _buildTitleTile(
+      {required String text,
+      required bool playing,
+      required VoidCallback onTap}) {
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.w),
