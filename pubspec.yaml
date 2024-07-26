@@ -108,6 +108,22 @@ flutter:
     - assets/config/
     - assets/www/
     # assets-generator-begin
+    # assets/gif/*
+    - assets/gif/suction_5.gif
+    - assets/gif/suction_4.gif
+    - assets/gif/suction_1.gif
+    - assets/gif/suction_3.gif
+    - assets/gif/suction_2.gif
+    - assets/gif/auto_mode_1.gif
+    - assets/gif/auto_mode_2.gif
+    - assets/gif/auto_mode_3.gif
+    - assets/gif/auto_mode_7.gif
+    - assets/gif/auto_mode_6.gif
+    - assets/gif/auto_mode_4.gif
+    - assets/gif/auto_mode_5.gif
+    - assets/gif/auto_mode_8.gif
+    - assets/gif/auto_mode_9.gif
+    - assets/gif/auto_mode_10.gif
     # assets/images/*
     # assets/*
     # assets-generator-end

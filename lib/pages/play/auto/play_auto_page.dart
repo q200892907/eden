@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eden/r.dart';
 import 'package:eden/uikit/appbar/eden_gradient_app_bar.dart';
 import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden/utils/ble/ble_manager_provider.dart';
@@ -24,6 +25,8 @@ class PlayAutoPage extends ConsumerStatefulWidget {
 class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
   late final List<PlayAutoItemEntity> _suckItems;
   late final List<PlayAutoItemEntity> _vibrationItems;
+  late final ValueNotifier<String> _suckGifNotifier = ValueNotifier('');
+  late final ValueNotifier<String> _vibrationGifNotifier = ValueNotifier('');
   late final ValueNotifier<int> _suckIndexNotifier = ValueNotifier(0);
   late final ValueNotifier<int> _vibrationIndexNotifier = ValueNotifier(0);
   late final ValueNotifier<bool> _suckPlayingNotifier = ValueNotifier(false);
@@ -31,7 +34,6 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
   int _lastSuckIndex = 1;
   int _lastVibrationIndex = 1;
   late final ValueNotifier<double> _sliderValueNotifier = ValueNotifier(5);
-  bool _vibrating = false;
 
   @override
   void didChangeDependencies() {
@@ -63,7 +65,6 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // state = ref.read(bleDeviceStateProvider);
     return EdenBackground(
       child: Scaffold(
         appBar: EdenGradientAppBar(
@@ -76,7 +77,45 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
               height: 137.w,
               margin: EdgeInsets.symmetric(horizontal: 16.w),
               decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16.w))),
-              child: const Placeholder(),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Positioned.fill(
+                    child: ValueListenableBuilder(
+                      valueListenable: _suckGifNotifier,
+                      builder: (context, value, child) {
+                        return Visibility(
+                          visible: value.isNotEmpty,
+                          child: EdenImage.loadAssetImage(
+                            value,
+                            width: 343.w,
+                            height: 137.w,
+                            fit: BoxFit.fitWidth,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: ValueListenableBuilder(
+                      valueListenable: _vibrationGifNotifier,
+                      builder: (context, value, child) {
+                        return Visibility(
+                          visible: value.isNotEmpty,
+                          child: EdenImage.loadAssetImage(
+                            value,
+                            width: 343.w,
+                            height: 137.w,
+                            fit: BoxFit.fitWidth,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: CustomScrollView(
@@ -104,13 +143,10 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                 playing: value,
                 onTap: () {
                   if (value) {
-                    _suckIndexNotifier.value = 0;
                     _stopSuck();
                   } else {
-                    _suckIndexNotifier.value = _lastSuckIndex;
-                    _startSuck();
+                    _startSuck(_lastSuckIndex);
                   }
-                  _suckPlayingNotifier.value = !value;
                 },
               );
             }),
@@ -132,14 +168,9 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                   checked: value == index + 1,
                   onTap: () {
                     if (value == index + 1) {
-                      _suckIndexNotifier.value = 0;
-                      _suckPlayingNotifier.value = false;
                       _stopSuck();
                     } else {
-                      _suckIndexNotifier.value = index + 1;
-                      _lastSuckIndex = index + 1;
-                      _suckPlayingNotifier.value = true;
-                      _startSuck();
+                      _startSuck(index + 1);
                     }
                   },
                 );
@@ -163,11 +194,9 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                 playing: value,
                 onTap: () {
                   if (value) {
-                    _vibrationIndexNotifier.value = 0;
                     stopVibrate();
                   } else {
-                    _vibrationIndexNotifier.value = _lastVibrationIndex;
-                    startVibrate();
+                    startVibrate(_lastVibrationIndex);
                   }
                   _vibrationPlayingNotifier.value = !value;
                 },
@@ -184,8 +213,8 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                 value: value,
                 onChanged: (newValue) {
                   _sliderValueNotifier.value = newValue;
-                  if (_vibrating) {
-                    FunctionProxy(startVibrate, timeout: 120).throttleWithTimeout();
+                  if (_vibrationPlayingNotifier.value) {
+                    FunctionProxy(startVibrateWithoutMode, timeout: 120).throttleWithTimeout();
                   }
                 },
               );
@@ -209,13 +238,9 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                   onTap: () {
                     if (value == index + 1) {
                       _vibrationIndexNotifier.value = 0;
-                      _vibrationPlayingNotifier.value = false;
                       stopVibrate();
                     } else {
-                      _vibrationIndexNotifier.value = index + 1;
-                      _lastVibrationIndex = index + 1;
-                      _vibrationPlayingNotifier.value = true;
-                      startVibrate();
+                      startVibrate(index + 1);
                     }
                   },
                 );
@@ -234,7 +259,7 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
   Widget _buildTitleTile({required String text, required bool playing, required VoidCallback onTap}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.w),
-      color: Colors.blueGrey,
+      color: context.theme.primary,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -255,21 +280,104 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
     );
   }
 
-  void _startSuck() {
-    ref.read(bleDeviceStateProvider)?.suckMotor(_suckIndexNotifier.value);
+  void _startSuck(int mode) {
+    _suckIndexNotifier.value = mode;
+    _lastSuckIndex = mode;
+    _suckPlayingNotifier.value = true;
+    switch (mode) {
+      case 1:
+        _suckGifNotifier.value = R.assetsGifSuction1;
+        break;
+
+      case 2:
+        _suckGifNotifier.value = R.assetsGifSuction2;
+        break;
+
+      case 3:
+        _suckGifNotifier.value = R.assetsGifSuction3;
+        break;
+
+      case 4:
+        _suckGifNotifier.value = R.assetsGifSuction4;
+        break;
+
+      case 5:
+        _suckGifNotifier.value = R.assetsGifSuction5;
+        break;
+
+      default:
+        _suckGifNotifier.value = '';
+    }
+    ref.read(bleDeviceStateProvider)?.suckMotor(mode);
   }
 
   void _stopSuck() {
+    _suckIndexNotifier.value = 0;
+    _suckPlayingNotifier.value = false;
+    _suckGifNotifier.value = '';
     ref.read(bleDeviceStateProvider)?.stopSuckMotor();
   }
 
-  void startVibrate() {
-    _vibrating = true;
+  void startVibrate(int mode) {
+    _vibrationIndexNotifier.value = mode;
+    _lastVibrationIndex = mode;
+    _vibrationPlayingNotifier.value = true;
+    switch (mode) {
+      case 1:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode1;
+        break;
+
+      case 2:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode2;
+        break;
+
+      case 3:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode3;
+        break;
+
+      case 4:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode4;
+        break;
+
+      case 5:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode5;
+        break;
+
+      case 6:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode6;
+        break;
+
+      case 7:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode7;
+        break;
+
+      case 8:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode8;
+        break;
+
+      case 9:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode9;
+        break;
+
+      case 10:
+        _vibrationGifNotifier.value = R.assetsGifAutoMode10;
+        break;
+
+      default:
+        _vibrationGifNotifier.value = '';
+    }
+    ref.read(bleDeviceStateProvider)?.modeMotor(mode, _sliderValueNotifier.value.round());
+  }
+
+  /// 仅供特定场景下调节强度时使用
+  void startVibrateWithoutMode() {
     ref.read(bleDeviceStateProvider)?.modeMotor(_vibrationIndexNotifier.value, _sliderValueNotifier.value.round());
   }
 
   void stopVibrate() {
-    _vibrating = false;
+    _vibrationIndexNotifier.value = 0;
+    _vibrationPlayingNotifier.value = false;
+    _vibrationGifNotifier.value = '';
     ref.read(bleDeviceStateProvider)?.stopModeMotor();
   }
 }
