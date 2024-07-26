@@ -23,8 +23,6 @@ class PlayAutoItem extends StatelessWidget {
       },
       behavior: HitTestBehavior.translucent,
       child: Container(
-        // width: 87.w,
-        // height: 70.w,
         constraints: BoxConstraints.expand(width: 87.w, height: 70.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.w),
@@ -36,12 +34,12 @@ class PlayAutoItem extends StatelessWidget {
           children: [
             Icon(
               Icons.circle,
-              color: context.theme.primary,
+              color: checked ? Colors.white : context.theme.primary,
               size: 24.w,
             ),
             Text(
               title,
-              style: 12.spts.primary(context),
+              style: 12.spts.copyWith(color: checked ? Colors.white : context.theme.primary),
             ),
           ],
         ),

@@ -339,6 +339,106 @@ class EdenStrings {
       args: [],
     );
   }
+
+  /// `mode 1`
+  String get mode1 {
+    return Intl.message(
+      'mode 1',
+      name: 'mode1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 2`
+  String get mode2 {
+    return Intl.message(
+      'mode 2',
+      name: 'mode2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 3`
+  String get mode3 {
+    return Intl.message(
+      'mode 3',
+      name: 'mode3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 4`
+  String get mode4 {
+    return Intl.message(
+      'mode 4',
+      name: 'mode4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 5`
+  String get mode5 {
+    return Intl.message(
+      'mode 5',
+      name: 'mode5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 6`
+  String get mode6 {
+    return Intl.message(
+      'mode 6',
+      name: 'mode6',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 7`
+  String get mode7 {
+    return Intl.message(
+      'mode 7',
+      name: 'mode7',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 8`
+  String get mode8 {
+    return Intl.message(
+      'mode 8',
+      name: 'mode8',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 9`
+  String get mode9 {
+    return Intl.message(
+      'mode 9',
+      name: 'mode9',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mode 10`
+  String get mode10 {
+    return Intl.message(
+      'mode 10',
+      name: 'mode10',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<EdenStrings> {
