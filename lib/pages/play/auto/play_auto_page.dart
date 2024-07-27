@@ -188,38 +188,40 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
     return [
       SliverToBoxAdapter(
         child: ValueListenableBuilder(
-            valueListenable: _vibrationPlayingNotifier,
-            builder: (context, value, child) {
-              return _buildTitleTile(
-                text: context.strings.vibrationMode,
-                playing: value,
-                onTap: () {
-                  if (value) {
-                    stopVibrate();
-                  } else {
-                    startVibrate(_lastVibrationIndex);
-                  }
-                  _vibrationPlayingNotifier.value = !value;
-                },
-              );
-            }),
+          valueListenable: _vibrationPlayingNotifier,
+          builder: (context, value, child) {
+            return _buildTitleTile(
+              text: context.strings.vibrationMode,
+              playing: value,
+              onTap: () {
+                if (value) {
+                  stopVibrate();
+                } else {
+                  startVibrate(_lastVibrationIndex);
+                }
+                _vibrationPlayingNotifier.value = !value;
+              },
+            );
+          },
+        ),
       ),
       SliverToBoxAdapter(
         child: ValueListenableBuilder(
-            valueListenable: _sliderValueNotifier,
-            builder: (context, value, child) {
-              return Slider(
-                min: 1,
-                max: 10,
-                value: value,
-                onChanged: (newValue) {
-                  _sliderValueNotifier.value = newValue;
-                  if (_vibrationPlayingNotifier.value) {
-                    FunctionProxy(startVibrateWithoutMode, timeout: 120).throttleWithTimeout();
-                  }
-                },
-              );
-            }),
+          valueListenable: _sliderValueNotifier,
+          builder: (context, value, child) {
+            return Slider(
+              min: 1,
+              max: 10,
+              value: value,
+              onChanged: (newValue) {
+                _sliderValueNotifier.value = newValue;
+                if (_vibrationPlayingNotifier.value) {
+                  FunctionProxy(startVibrateWithoutMode, timeout: 120).throttleWithTimeout();
+                }
+              },
+            );
+          },
+        ),
       ),
       SliverPadding(
         padding: EdgeInsets.all(8.w),

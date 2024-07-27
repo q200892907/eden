@@ -171,10 +171,10 @@ class BleDevice {
 
   /// 交互类震动——声音模式
   ///
-  /// [dbValue] 声音数据
-  void soundMotor(num dbValue) {
+  /// [intensity] 强度
+  void soundMotor(num intensity) {
     if (_writeCharacter != null) {
-      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, (dbValue / 15 * 255).round() & 0xff, 0xAA];
+      final List<int> bytes = [0x55, 0x4, motorNum & 0xff, 0x0, 0x0, (intensity * 255).round() & 0xff, 0xAA];
       _queue.write(_writeCharacter!, bytes, noRsp: true);
     }
   }

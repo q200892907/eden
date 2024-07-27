@@ -84,6 +84,16 @@ class RecordUtil {
     } catch (_) {}
   }
 
+  /// 暂停录音方法
+  Future<void> pause() async {
+    await _audioRecorder.pause();
+  }
+
+  /// 恢复录音方法
+  Future<void> resume() async {
+    await _audioRecorder.resume();
+  }
+
   /// 停止录音方法
   Future<void> stop() async {
     await _audioRecorder.stop();
@@ -117,8 +127,9 @@ class RecordUtil {
     double aMin = -160.0;
     double aMax = 0.0;
     double bMin = 0.0;
-    double bMax = 1.0;
+    double bMax = 0.75;
     double result = (originalValue - aMin) / (aMax - aMin);
-    return double.parse(result.toStringAsFixed(2));
+    double targetValue = bMin + (result * (bMax - bMin));
+    return double.parse(targetValue.toStringAsFixed(2));
   }
 }

@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:eden/uikit/appbar/eden_gradient_app_bar.dart';
 import 'package:eden/uikit/background/eden_background.dart';
+import 'package:eden/utils/ble/ble_manager_provider.dart';
+import 'package:eden/utils/function_proxy.dart';
 import 'package:eden/utils/record_util.dart';
 import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_uikit/eden_uikit.dart';
@@ -22,6 +24,8 @@ class PlaySoundPage extends StatefulWidget {
 }
 
 class _PlaySoundPageState extends State<PlaySoundPage> {
+  late final ValueNotifier<double> _sliderValueNotifier = ValueNotifier(1);
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +61,7 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
                             builder: (context, recordState, child) {
                               return Visibility(
                                 visible: recordState == RecordState.record,
-                                child: const WaveWidget(),
+                                child: WaveWidget(notifier: _sliderValueNotifier),
                               );
                             }),
                       ),
@@ -80,13 +84,53 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
                   alignment: Alignment.topCenter,
                   child: Column(
                     children: [
+                      Text(
+                        '灵敏度',
+                        style: 13.spts,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            '低',
+                            style: 12.spts,
+                          ),
+                          Expanded(
+                            child: ValueListenableBuilder(
+                              valueListenable: _sliderValueNotifier,
+                              builder: (context, value, child) {
+                                return Slider(
+                                  min: 0.5,
+                                  max: 1.5,
+                                  value: value,
+                                  onChanged: (newValue) {
+                                    _sliderValueNotifier.value = newValue;
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Text(
+                            '高',
+                            style: 12.spts,
+                          ),
+                        ],
+                      ),
+                      30.vGap,
                       GestureDetector(
                         onTap: () {
                           _onRecordClick();
                         },
-                        child: Icon(
-                          Icons.mic,
-                          size: 60.w,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: context.theme.primary,
+                          ),
+                          padding: EdgeInsets.all(16.w),
+                          child: Icon(
+                            Icons.mic,
+                            size: 60.w,
+                            color: Colors.white,
+                          ),
                         ),
                       )
                     ],
@@ -102,7 +146,9 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
 
   void _onRecordClick() async {
     if (RecordUtil.instance.recordState.value == RecordState.record) {
-      await RecordUtil.instance.stop();
+      await RecordUtil.instance.pause();
+    } else if (RecordUtil.instance.recordState.value == RecordState.pause) {
+      await RecordUtil.instance.resume();
     } else {
       await RecordUtil.instance.start();
     }
@@ -115,38 +161,48 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
   }
 }
 
-class WaveWidget extends StatefulWidget {
-  const WaveWidget({super.key});
+class WaveWidget extends ConsumerStatefulWidget {
+  const WaveWidget({super.key, required this.notifier});
+
+  final ValueNotifier<double> notifier;
 
   @override
-  State<WaveWidget> createState() => _WaveWidgetState();
+  ConsumerState<WaveWidget> createState() => _WaveWidgetState();
 }
 
-class _WaveWidgetState extends State<WaveWidget> {
-  late IOS7SiriWaveformController controller;
+class _WaveWidgetState extends ConsumerState<WaveWidget> {
+  late IOS7SiriWaveformController controller = IOS7SiriWaveformController(speed: .1, frequency: 2);
+
+  ValueNotifier<double> get sliderNotifier => widget.notifier;
+
+  double _sliderValue = 1;
+
+  /// 强度
+  double _intensity = .0;
 
   @override
   void initState() {
     super.initState();
+    sliderNotifier.addListener(_sliderValueListener);
     RecordUtil.instance.amplitude.addListener(_listener);
-    controller = IOS7SiriWaveformController(
-      amplitude: 0,
-      frequency: 6,
-      speed: 0.2,
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.amplitude = .0;
+      controller.color = context.theme.primary;
+    });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    controller.color = context.theme.primary;
+  void _sliderValueListener() {
+    _sliderValue = sliderNotifier.value;
   }
 
   void _listener() {
     if (mounted) {
-      controller.amplitude = RecordUtil.transformValue(RecordUtil.scaleValue(max(-40, RecordUtil.instance.amplitude.value.current)));
+      final double result = RecordUtil.transformValue(RecordUtil.scaleValue(max(-40, RecordUtil.instance.amplitude.value.current)));
+      controller.amplitude = (result * _sliderValue).clamp(0.03, 1.0);
       debugPrint('amplitude = ${controller.amplitude}');
       setState(() {});
+      _intensity = (result * _sliderValue).clamp(.0, 1.0);
+      FunctionProxy(soundMotor, timeout: 120).throttleWithTimeout();
     }
   }
 
@@ -160,25 +216,16 @@ class _WaveWidgetState extends State<WaveWidget> {
         height: 250.w,
       ),
     );
-    // return ValueListenableBuilder(
-    //   valueListenable: RecordUtil.instance.amplitude,
-    //   builder: (context, amplitude, child) {
-    //     controller.amplitude = RecordUtil.transformValue(RecordUtil.scaleValue(max(-40, amplitude.current)));
-    //     debugPrint('amplitude = ${controller.amplitude}');
-    //     return SiriWaveform.ios7(
-    //       controller: controller,
-    //       options: IOS7SiriWaveformOptions(
-    //         width: 313.w,
-    //         height: 250.w,
-    //       ),
-    //     );
-    //   },
-    // );
+  }
+
+  void soundMotor() {
+    ref.read(bleDeviceStateProvider)?.soundMotor(_intensity);
   }
 
   @override
   void dispose() {
     super.dispose();
     RecordUtil.instance.amplitude.removeListener(_listener);
+    sliderNotifier.removeListener(_sliderValueListener);
   }
 }
