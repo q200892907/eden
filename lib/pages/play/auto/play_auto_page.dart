@@ -43,23 +43,23 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
 
   void _initData() {
     _suckItems = [
-      PlayAutoItemEntity(icon: '', title: context.strings.mode1),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode2),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode3),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode4),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode5),
+      PlayAutoItemEntity(icon: R.assetsImagesSuckMode1, title: context.strings.mode1),
+      PlayAutoItemEntity(icon: R.assetsImagesSuckMode2, title: context.strings.mode2),
+      PlayAutoItemEntity(icon: R.assetsImagesSuckMode3, title: context.strings.mode3),
+      PlayAutoItemEntity(icon: R.assetsImagesSuckMode4, title: context.strings.mode4),
+      PlayAutoItemEntity(icon: R.assetsImagesSuckMode5, title: context.strings.mode5),
     ];
     _vibrationItems = [
-      PlayAutoItemEntity(icon: '', title: context.strings.mode1),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode2),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode3),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode4),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode5),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode6),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode7),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode8),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode9),
-      PlayAutoItemEntity(icon: '', title: context.strings.mode10),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode1, title: context.strings.mode1),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode2, title: context.strings.mode2),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode3, title: context.strings.mode3),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode4, title: context.strings.mode4),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode5, title: context.strings.mode5),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode6, title: context.strings.mode6),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode7, title: context.strings.mode7),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode8, title: context.strings.mode8),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode9, title: context.strings.mode9),
+      PlayAutoItemEntity(icon: R.assetsImagesVibrateMode10, title: context.strings.mode10),
     ];
   }
 
@@ -90,7 +90,7 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                             value,
                             width: 343.w,
                             height: 137.w,
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.fill,
                             color: Colors.white,
                           ),
                         );
@@ -107,7 +107,7 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
                             value,
                             width: 343.w,
                             height: 137.w,
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.fill,
                             color: Colors.white,
                           ),
                         );
@@ -164,6 +164,7 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
               builder: (context, value, child) {
                 return PlayAutoItem(
                   icon: item.icon,
+                  iconSize: Size(31.w, 31.w),
                   title: item.title,
                   checked: value == index + 1,
                   onTap: () {
@@ -233,6 +234,7 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
               builder: (context, value, child) {
                 return PlayAutoItem(
                   icon: item.icon,
+                  iconSize: Size(60.w, 20.w),
                   title: item.title,
                   checked: value == index + 1,
                   onTap: () {
@@ -286,23 +288,23 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
     _suckPlayingNotifier.value = true;
     switch (mode) {
       case 1:
-        _suckGifNotifier.value = R.assetsGifSuction1;
+        _suckGifNotifier.value = R.assetsGifSuckMode1;
         break;
 
       case 2:
-        _suckGifNotifier.value = R.assetsGifSuction2;
+        _suckGifNotifier.value = R.assetsGifSuckMode2;
         break;
 
       case 3:
-        _suckGifNotifier.value = R.assetsGifSuction3;
+        _suckGifNotifier.value = R.assetsGifSuckMode3;
         break;
 
       case 4:
-        _suckGifNotifier.value = R.assetsGifSuction4;
+        _suckGifNotifier.value = R.assetsGifSuckMode4;
         break;
 
       case 5:
-        _suckGifNotifier.value = R.assetsGifSuction5;
+        _suckGifNotifier.value = R.assetsGifSuckMode5;
         break;
 
       default:
@@ -324,43 +326,43 @@ class _PlayAutoPageState extends ConsumerState<PlayAutoPage> {
     _vibrationPlayingNotifier.value = true;
     switch (mode) {
       case 1:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode1;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode1;
         break;
 
       case 2:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode2;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode2;
         break;
 
       case 3:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode3;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode3;
         break;
 
       case 4:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode4;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode4;
         break;
 
       case 5:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode5;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode5;
         break;
 
       case 6:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode6;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode6;
         break;
 
       case 7:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode7;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode7;
         break;
 
       case 8:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode8;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode8;
         break;
 
       case 9:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode9;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode9;
         break;
 
       case 10:
-        _vibrationGifNotifier.value = R.assetsGifAutoMode10;
+        _vibrationGifNotifier.value = R.assetsGifVibrateMode10;
         break;
 
       default:

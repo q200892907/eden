@@ -109,21 +109,36 @@ flutter:
     - assets/www/
     # assets-generator-begin
     # assets/gif/*
-    - assets/gif/suction_5.gif
-    - assets/gif/suction_4.gif
-    - assets/gif/suction_1.gif
-    - assets/gif/suction_3.gif
-    - assets/gif/suction_2.gif
-    - assets/gif/auto_mode_1.gif
-    - assets/gif/auto_mode_2.gif
-    - assets/gif/auto_mode_3.gif
-    - assets/gif/auto_mode_7.gif
-    - assets/gif/auto_mode_6.gif
-    - assets/gif/auto_mode_4.gif
-    - assets/gif/auto_mode_5.gif
-    - assets/gif/auto_mode_8.gif
-    - assets/gif/auto_mode_9.gif
-    - assets/gif/auto_mode_10.gif
+    - assets/gif/vibrate_mode_9.gif
+    - assets/gif/vibrate_mode_8.gif
+    - assets/gif/vibrate_mode_10.gif
+    - assets/gif/suck_mode_2.gif
+    - assets/gif/suck_mode_3.gif
+    - assets/gif/suck_mode_1.gif
+    - assets/gif/suck_mode_4.gif
+    - assets/gif/suck_mode_5.gif
+    - assets/gif/vibrate_mode_3.gif
+    - assets/gif/vibrate_mode_2.gif
+    - assets/gif/vibrate_mode_1.gif
+    - assets/gif/vibrate_mode_5.gif
+    - assets/gif/vibrate_mode_4.gif
+    - assets/gif/vibrate_mode_6.gif
+    - assets/gif/vibrate_mode_7.gif
     # assets/images/*
+    - assets/images/vibrate_mode_3.png
+    - assets/images/vibrate_mode_2.png
+    - assets/images/vibrate_mode_1.png
+    - assets/images/vibrate_mode_5.png
+    - assets/images/vibrate_mode_4.png
+    - assets/images/vibrate_mode_6.png
+    - assets/images/vibrate_mode_7.png
+    - assets/images/vibrate_mode_9.png
+    - assets/images/vibrate_mode_8.png
+    - assets/images/vibrate_mode_10.png
+    - assets/images/suck_mode_2.png
+    - assets/images/suck_mode_3.png
+    - assets/images/suck_mode_1.png
+    - assets/images/suck_mode_4.png
+    - assets/images/suck_mode_5.png
     # assets/*
     # assets-generator-end

@@ -5,12 +5,14 @@ class PlayAutoItem extends StatelessWidget {
   const PlayAutoItem({
     super.key,
     required this.icon,
+    required this.iconSize,
     required this.title,
     required this.checked,
     required this.onTap,
   });
 
   final String icon;
+  final Size iconSize;
   final String title;
   final bool checked;
   final VoidCallback onTap;
@@ -32,10 +34,11 @@ class PlayAutoItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              Icons.circle,
+            EdenImage.loadAssetImage(
+              icon,
+              width: iconSize.width,
+              height: iconSize.height,
               color: checked ? Colors.white : context.theme.primary,
-              size: 24.w,
             ),
             Text(
               title,
