@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:eden/utils/music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:record/record.dart';
-import 'package:vibration/vibration.dart';
-import 'package:path/path.dart' as p;
 
 class RecordUtil {
   factory RecordUtil() => _getInstance();
@@ -21,35 +18,26 @@ class RecordUtil {
     return _instance!;
   }
 
-  late final AudioRecorder _audioRecorder;
+  late final AudioRecorder _audioRecorder = AudioRecorder();
   StreamSubscription<RecordState>? _responseStream;
   StreamSubscription<Amplitude>? _amplitudeStream;
-  String? _filePath;
   final ValueNotifier<List<double>> _dbList = ValueNotifier([]);
   final ValueNotifier<RecordState> _state = ValueNotifier(RecordState.stop);
-  final ValueNotifier<int> _recordTime = ValueNotifier(0);
-  final int _maxTime = 100;
-  Timer? _timer;
+  final ValueNotifier<Amplitude> _amplitude = ValueNotifier(Amplitude(current: -160, max: -160));
+
+  ValueNotifier<RecordState> get recordState => _state;
+
+  ValueNotifier<Amplitude> get amplitude => _amplitude;
 
   void init() {
-    _audioRecorder = AudioRecorder();
     _audioRecorder.hasPermission();
 
     _responseStream = _audioRecorder.onStateChanged().listen((recordState) {
-      if (recordState == RecordState.record) {
-        // 开启计时器
-        _startTimer();
-        //开始震动
-        Vibration.vibrate(duration: 60);
-      }
       _state.value = recordState;
     });
 
-    _amplitudeStream = _audioRecorder
-        .onAmplitudeChanged(const Duration(
-      milliseconds: 100,
-    ))
-        .listen((amp) {
+    _amplitudeStream = _audioRecorder.onAmplitudeChanged(const Duration(milliseconds: 500)).listen((amp) {
+      _amplitude.value = amp;
       double db = amp.current / amp.max;
       if (db >= 1) {
         return;
@@ -58,58 +46,24 @@ class RecordUtil {
     });
   }
 
-  /// 开启计时器
-  void _startTimer() {
-    _stopTimer();
-    // 开启倒计时
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      _recordTime.value = _recordTime.value + 1;
-      // 停止计时器
-      if (_recordTime.value >= _maxTime) {
-        stop();
-      }
-    });
-  }
-
-  /// 关闭计时器
-  void _stopTimer() {
-    _timer?.cancel();
-  }
-
-  /// 删除文件
-  void _deleteFile(String? path) {
-    if (path == null) {
-      return;
-    }
-    final File file = File(path);
-    file.exists().then((bool exist) {
-      if (exist) {
-        file.delete();
-      }
-    });
-  }
-
   Future<bool> _isEncoderSupported(AudioEncoder encoder) async {
     final isSupported = await _audioRecorder.isEncoderSupported(
       encoder,
     );
-
     if (!isSupported) {
       debugPrint('${encoder.name} is not supported on this platform.');
       debugPrint('Supported encoders are:');
-
       for (final e in AudioEncoder.values) {
         if (await _audioRecorder.isEncoderSupported(e)) {
           debugPrint('- ${encoder.name}');
         }
       }
     }
-
     return isSupported;
   }
 
   /// 开始录音的方法
-  void start() async {
+  Future<void> start() async {
     try {
       //  先停止播放
       MusicPlayer.instance.stop();
@@ -118,51 +72,27 @@ class RecordUtil {
       if (!isPermission) {
         return;
       }
-      const encoder = AudioEncoder.wav;
-
+      const encoder = AudioEncoder.aacLc;
       if (!await _isEncoderSupported(encoder)) {
         return;
       }
-
       final devs = await _audioRecorder.listInputDevices();
       debugPrint(devs.toString());
-
       const config = RecordConfig(encoder: encoder, numChannels: 1);
       //开始录音
-      _audioRecorder.start(config, path: await _getPath());
+      await _audioRecorder.startStream(config);
     } catch (_) {}
   }
 
-  Future<String> _getPath() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return p.join(
-      dir.path,
-      'audio_${DateTime.now().millisecondsSinceEpoch}.wav',
-    );
-  }
-
   /// 停止录音方法
-  Future<String?> stop() async {
-    // 停止计时器
-    _stopTimer();
-    _filePath = await _audioRecorder.stop();
-    if (_filePath != null) {
-      double audioLength = _recordTime.value.toDouble(); // 录音时长
-      if (audioLength < 1) {
-        _deleteFile(_filePath);
-        _filePath = null;
-      }
-    } else {
-      _deleteFile(_filePath);
-      _filePath == null;
-    }
+  Future<void> stop() async {
+    await _audioRecorder.stop();
+    await _audioRecorder.cancel();
     _resetOptions();
-    return _filePath;
   }
 
   ///重置参数
   void _resetOptions() {
-    _recordTime.value = 0;
     _dbList.value = [];
     _state.value = RecordState.stop;
   }
@@ -171,5 +101,24 @@ class RecordUtil {
     _responseStream?.cancel();
     _amplitudeStream?.cancel();
     stop();
+  }
+
+  static double scaleValue(double originalValue) {
+    double aMin = -40.0; // 原始区间最小值
+    double aMax = 0.0;   // 原始区间最大值
+    double bMin = -160.0; // 目标区间最小值
+    double bMax = 0.0;   // 目标区间最大值
+    double proportion = (originalValue - aMin) / (aMax - aMin);
+    double targetValue = bMin + (proportion * (bMax - bMin));
+    return targetValue;
+  }
+
+  static double transformValue(double originalValue) {
+    double aMin = -160.0;
+    double aMax = 0.0;
+    double bMin = 0.0;
+    double bMax = 1.0;
+    double result = (originalValue - aMin) / (aMax - aMin);
+    return double.parse(result.toStringAsFixed(2));
   }
 }

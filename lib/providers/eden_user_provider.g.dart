@@ -6,7 +6,7 @@ part of 'eden_user_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$edenUserNotifierHash() => r'ea81a23991dd4d2d603bd40cc650cae0229421b9';
+String _$edenUserNotifierHash() => r'44b8094c67ab2947ab727e6ffbfd9f72a8ed63ca';
 
 /// See also [EdenUserNotifier].
 @ProviderFor(EdenUserNotifier)

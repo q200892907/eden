@@ -182,6 +182,10 @@ RouteBase get $playRoute => GoRouteData.$route(
           path: 'auto',
           factory: $PlayAutoRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: 'sound',
+          factory: $PlaySoundRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -225,6 +229,24 @@ extension $PlayAutoRouteExtension on PlayAutoRoute {
 
   String get location => GoRouteData.$location(
         '/play/auto',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $PlaySoundRouteExtension on PlaySoundRoute {
+  static PlaySoundRoute _fromState(GoRouterState state) =>
+      const PlaySoundRoute();
+
+  String get location => GoRouteData.$location(
+        '/play/sound',
       );
 
   void go(BuildContext context) => context.go(location);

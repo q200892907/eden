@@ -32,7 +32,9 @@ class _PlayPageState extends State<PlayPage> {
       ),
       PlayModeItem(
         title: context.strings.sound,
-        onTap: () {},
+        onTap: () {
+          const PlaySoundRoute().push(context);
+        },
       ),
       PlayModeItem(
         title: context.strings.music,

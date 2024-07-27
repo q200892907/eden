@@ -83,6 +83,7 @@ dependencies:
   media_kit_video: any
   media_kit_libs_video: any
   web_socket_client: any
+  siri_wave: ^2.0.0+1
 dependency_overrides:
   keyboard_height_plugin:
     git: https://github.com/q200892907/keyboard_height_plugin.git
