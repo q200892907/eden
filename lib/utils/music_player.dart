@@ -16,10 +16,10 @@ class MusicPlayer {
     player = Player();
     player.setPlaylistMode(PlaylistMode.loop);
     player.stream.playlist.listen((value) {
-      print('play:${value.index}');
+      // print('play:${value.index}');
     });
     player.stream.position.listen((value) {
-      print('position:$value');
+      // print('position:$value');
       // getDbAtTime(value).then((db) {
       //   print('db:$db');
       // });

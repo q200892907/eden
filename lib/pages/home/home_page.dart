@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:eden/router/eden_router.dart';
@@ -6,14 +7,64 @@ import 'package:eden/uikit/audio/eden_audio_view.dart';
 import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden/uikit/button/eden_gradient_button.dart';
 import 'package:eden/uikit/button/eden_outlined_button.dart';
+import 'package:eden/utils/ble/ble_manager_provider.dart';
 import 'package:eden/utils/file_util.dart';
 import 'package:eden/utils/local_http_service.dart';
 import 'package:eden/utils/music_player.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
+import 'package:just_waveform/just_waveform.dart';
+import 'package:media_kit/media_kit.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
+
+  @override
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  late StreamSubscription _indexStreamListener;
+  late StreamSubscription _posStreamListener;
+
+  Waveform? _curWaveForm;
+
+  @override
+  void initState() {
+    super.initState();
+    _indexStreamListener = MusicPlayer.instance.player.stream.playlist.listen((value) {
+      final int index = value.index;
+      debugPrint('当前音频Index:$index');
+      _curWaveForm = null;
+      File waveFile = File('${MusicPlayer.instance.musicList.value[index].path}.wave');
+      // 解析波形文件
+      Stopwatch stopwatch = Stopwatch();
+      stopwatch.start();
+      JustWaveform.parse(waveFile).then((waveForm) {
+        stopwatch.stop();
+        debugPrint("解析波形文件耗时(ms)：${stopwatch.elapsed.inMilliseconds}");
+        _curWaveForm = waveForm;
+      });
+    });
+    _posStreamListener = MusicPlayer.instance.player.stream.position.listen((p) {
+      final int milliSeconds = p.inMilliseconds;
+      debugPrint('当前音频进度(ms):$milliSeconds');
+      if (_curWaveForm != null) {
+        int sampleId = _curWaveForm!.positionToPixel(Duration(milliseconds: milliSeconds)).toInt();
+        int min = _curWaveForm!.getPixelMin(sampleId);
+        int max = _curWaveForm!.getPixelMax(sampleId);
+        debugPrint('波形文件min：$min；max：$max');
+        double dbPercent;
+        if (_curWaveForm!.flags == 0) {
+          dbPercent = (min.abs() + max.abs()) / 65535;
+        } else {
+          dbPercent = (min.abs() + max.abs()) / 255;
+        }
+        debugPrint('dbPercent：$dbPercent');
+        ref.read(bleDeviceStateProvider)?.musicMotor(dbPercent);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,5 +163,12 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _indexStreamListener.cancel();
+    _posStreamListener.cancel();
   }
 }

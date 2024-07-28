@@ -5,6 +5,7 @@ import 'package:eden/utils/file_util.dart';
 import 'package:eden/utils/music_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:just_waveform/just_waveform.dart';
 import 'package:mime/mime.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -51,31 +52,21 @@ class LocalHttpService {
           ..headers.contentType = ContentType.html
           ..write(await rootBundle.loadString('assets/www/index.html'))
           ..close();
-      } else if (request.uri.path == '/upload' &&
-          request.method.toUpperCase() == 'POST') {
+      } else if (request.uri.path == '/upload' && request.method.toUpperCase() == 'POST') {
         // 上传接口 这边定义跟后端写法差不多
         if (request.headers.contentType?.mimeType == 'multipart/form-data') {
           // 指定 multipart/form-data 传输二进制类型
           // 这里使用mime/mime.dart 的 MimeMultipartTransformer 解析二进制数据
           // 坑点 使用官方示例会报错，然后调整以下
-          String boundary =
-              request.headers.contentType!.parameters['boundary']!;
+          String boundary = request.headers.contentType!.parameters['boundary']!;
           // 然后处理HttpRequest流
-          await for (var multipart
-              in MimeMultipartTransformer(boundary).bind(request)) {
+          await for (var multipart in MimeMultipartTransformer(boundary).bind(request)) {
             // 然后在body里面的 filename和field 都在 multipart.headers里面 然后文件流就是multipart本身
-            String? contentDisposition =
-                multipart.headers['content-disposition'];
-            String? filename = contentDisposition
-                ?.split("; ")
-                .where((item) => item.startsWith("filename="))
-                .first
-                .replaceFirst("filename=", "")
-                .replaceAll('"', '');
+            String? contentDisposition = multipart.headers['content-disposition'];
+            String? filename =
+                contentDisposition?.split("; ").where((item) => item.startsWith("filename=")).first.replaceFirst("filename=", "").replaceAll('"', '');
             // 我这边指定txt文件，否则跳过，如果不需要就略过
-            if (filename == null ||
-                filename.isEmpty ||
-                !(FileUtil.isAudio(filename))) {
+            if (filename == null || filename.isEmpty || !(FileUtil.isAudio(filename))) {
               continue;
             }
             String path = FileUtil.filePath("${_dir.path}/$filename");
@@ -84,6 +75,22 @@ class LocalHttpService {
             await multipart.pipe(sink);
             await sink.close();
             // 可以做其他操作
+            // 创建并生成波形文件
+            try {
+              String wavePath = FileUtil.filePath("${_dir.path}/$filename.wave");
+              File waveFile = File.fromUri(Uri.file(wavePath));
+              Stream<WaveformProgress> stream = JustWaveform.extract(audioInFile: file, waveOutFile: waveFile);
+              double progress = 0;
+              await for(WaveformProgress data in stream) {
+                progress = data.progress;
+                debugPrint('progress = $progress');
+              }
+              if (progress != 1) {
+                throw Exception('转换波形文件失败');
+              }
+            } catch (e) {
+              // TODO 转换波形文件失败，删除波形文件和音频文件，并返回失败
+            }
           }
           MusicPlayer.instance.scan();
           // 这边我直接成功，可以做其他判断
