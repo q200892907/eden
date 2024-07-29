@@ -1,6 +1,6 @@
 import 'dart:io';
 
-class FileUtil {
+class EdenFileUtil {
   static bool isAudio(String path) {
     List<String> audioExtensions = ['.mp3'];
     String extension = path.split('.').last.toLowerCase();
@@ -33,5 +33,5 @@ class FileUtil {
 }
 
 extension StringExtension on String {
-  String get fileName => FileUtil.fileName(this);
+  String get fileName => EdenFileUtil.fileName(this);
 }

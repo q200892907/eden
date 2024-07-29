@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:eden/entities/toy_command_entity.dart';
-import 'package:eden/utils/vibration_utils.dart';
+import 'package:eden/utils/eden_vibration.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'toy_provider.g.dart';
@@ -51,7 +51,7 @@ class ToyNotifier extends _$ToyNotifier {
           state?.motor([vibrationCommand.value, vibrationCommand.value]);
         } else {
           int mobileVibrate = 255 * vibrationCommand.value ~/ 100;
-          VibrationUtils.vibrate(
+          EdenVibration.vibrate(
             amplitude: mobileVibrate,
             duration: vibrationCommand.duration.toInt(),
           );

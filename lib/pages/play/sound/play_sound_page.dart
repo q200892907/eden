@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:eden/uikit/appbar/eden_gradient_app_bar.dart';
 import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden/utils/ble/ble_manager_provider.dart';
+import 'package:eden/utils/eden_record.dart';
 import 'package:eden/utils/function_proxy.dart';
-import 'package:eden/utils/record_util.dart';
 import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
   @override
   void initState() {
     super.initState();
-    RecordUtil.instance.init();
+    EdenRecord.instance.init();
   }
 
   @override
@@ -57,11 +57,12 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
                     children: [
                       Expanded(
                         child: ValueListenableBuilder(
-                            valueListenable: RecordUtil.instance.recordState,
+                            valueListenable: EdenRecord.instance.recordState,
                             builder: (context, recordState, child) {
                               return Visibility(
                                 visible: recordState == RecordState.record,
-                                child: WaveWidget(notifier: _sliderValueNotifier),
+                                child:
+                                    WaveWidget(notifier: _sliderValueNotifier),
                               );
                             }),
                       ),
@@ -145,18 +146,18 @@ class _PlaySoundPageState extends State<PlaySoundPage> {
   }
 
   void _onRecordClick() async {
-    if (RecordUtil.instance.recordState.value == RecordState.record) {
-      await RecordUtil.instance.pause();
-    } else if (RecordUtil.instance.recordState.value == RecordState.pause) {
-      await RecordUtil.instance.resume();
+    if (EdenRecord.instance.recordState.value == RecordState.record) {
+      await EdenRecord.instance.pause();
+    } else if (EdenRecord.instance.recordState.value == RecordState.pause) {
+      await EdenRecord.instance.resume();
     } else {
-      await RecordUtil.instance.start();
+      await EdenRecord.instance.start();
     }
   }
 
   @override
   void dispose() {
-    RecordUtil.instance.dispose();
+    EdenRecord.instance.dispose();
     super.dispose();
   }
 }
@@ -171,7 +172,8 @@ class WaveWidget extends ConsumerStatefulWidget {
 }
 
 class _WaveWidgetState extends ConsumerState<WaveWidget> {
-  late IOS7SiriWaveformController controller = IOS7SiriWaveformController(speed: .1, frequency: 2);
+  late IOS7SiriWaveformController controller =
+      IOS7SiriWaveformController(speed: .1, frequency: 2);
 
   ValueNotifier<double> get sliderNotifier => widget.notifier;
 
@@ -184,7 +186,7 @@ class _WaveWidgetState extends ConsumerState<WaveWidget> {
   void initState() {
     super.initState();
     sliderNotifier.addListener(_sliderValueListener);
-    RecordUtil.instance.amplitude.addListener(_listener);
+    EdenRecord.instance.amplitude.addListener(_listener);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.amplitude = .0;
       controller.color = context.theme.primary;
@@ -197,7 +199,8 @@ class _WaveWidgetState extends ConsumerState<WaveWidget> {
 
   void _listener() {
     if (mounted) {
-      final double result = RecordUtil.transformValue(RecordUtil.scaleValue(max(-40, RecordUtil.instance.amplitude.value.current)));
+      final double result = EdenRecord.transformValue(EdenRecord.scaleValue(
+          max(-40, EdenRecord.instance.amplitude.value.current)));
       controller.amplitude = (result * _sliderValue).clamp(0.03, 1.0);
       debugPrint('amplitude = ${controller.amplitude}');
       setState(() {});
@@ -225,7 +228,7 @@ class _WaveWidgetState extends ConsumerState<WaveWidget> {
   @override
   void dispose() {
     super.dispose();
-    RecordUtil.instance.amplitude.removeListener(_listener);
+    EdenRecord.instance.amplitude.removeListener(_listener);
     sliderNotifier.removeListener(_sliderValueListener);
   }
 }

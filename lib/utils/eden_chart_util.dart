@@ -3,16 +3,16 @@ import 'package:eden_database/eden_database.dart';
 import 'package:eden_database/objectbox.g.dart';
 import 'package:flutter/material.dart';
 
-class ChartUtil {
-  factory ChartUtil() => _getInstance();
+class EdenChartUtil {
+  factory EdenChartUtil() => _getInstance();
 
-  static ChartUtil get instance => _getInstance();
-  static ChartUtil? _instance;
+  static EdenChartUtil get instance => _getInstance();
+  static EdenChartUtil? _instance;
 
-  ChartUtil._internal();
+  EdenChartUtil._internal();
 
-  static ChartUtil _getInstance() {
-    _instance ??= ChartUtil._internal();
+  static EdenChartUtil _getInstance() {
+    _instance ??= EdenChartUtil._internal();
     return _instance!;
   }
 

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:eden/utils/music_player.dart';
+import 'package:eden/utils/eden_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -73,7 +73,7 @@ class EdenAudioView extends StatelessWidget {
                   ),
                   Positioned.fill(
                     child: Video(
-                      controller: MusicPlayer.instance.controller,
+                      controller: EdenMusicPlayer.instance.controller,
                       fill: Colors.transparent,
                     ),
                   ),

@@ -1,20 +1,19 @@
 import 'dart:async';
 
-import 'package:eden/utils/music_player.dart';
+import 'package:eden/utils/eden_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:record/record.dart';
 
-class RecordUtil {
-  factory RecordUtil() => _getInstance();
+class EdenRecord {
+  factory EdenRecord() => _getInstance();
 
-  static RecordUtil get instance => _getInstance();
-  static RecordUtil? _instance;
+  static EdenRecord get instance => _getInstance();
+  static EdenRecord? _instance;
 
-  RecordUtil._internal();
+  EdenRecord._internal();
 
-  static RecordUtil _getInstance() {
-    _instance ??= RecordUtil._internal();
+  static EdenRecord _getInstance() {
+    _instance ??= EdenRecord._internal();
     return _instance!;
   }
 
@@ -23,7 +22,8 @@ class RecordUtil {
   StreamSubscription<Amplitude>? _amplitudeStream;
   final ValueNotifier<List<double>> _dbList = ValueNotifier([]);
   final ValueNotifier<RecordState> _state = ValueNotifier(RecordState.stop);
-  final ValueNotifier<Amplitude> _amplitude = ValueNotifier(Amplitude(current: -160, max: -160));
+  final ValueNotifier<Amplitude> _amplitude =
+      ValueNotifier(Amplitude(current: -160, max: -160));
 
   ValueNotifier<RecordState> get recordState => _state;
 
@@ -36,7 +36,9 @@ class RecordUtil {
       _state.value = recordState;
     });
 
-    _amplitudeStream = _audioRecorder.onAmplitudeChanged(const Duration(milliseconds: 500)).listen((amp) {
+    _amplitudeStream = _audioRecorder
+        .onAmplitudeChanged(const Duration(milliseconds: 500))
+        .listen((amp) {
       _amplitude.value = amp;
       double db = amp.current / amp.max;
       if (db >= 1) {
@@ -66,7 +68,7 @@ class RecordUtil {
   Future<void> start() async {
     try {
       //  先停止播放
-      MusicPlayer.instance.stop();
+      EdenMusicPlayer.instance.stop();
       // 检查权限
       bool isPermission = await _audioRecorder.hasPermission();
       if (!isPermission) {
@@ -115,9 +117,9 @@ class RecordUtil {
 
   static double scaleValue(double originalValue) {
     double aMin = -40.0; // 原始区间最小值
-    double aMax = 0.0;   // 原始区间最大值
+    double aMax = 0.0; // 原始区间最大值
     double bMin = -160.0; // 目标区间最小值
-    double bMax = 0.0;   // 目标区间最大值
+    double bMax = 0.0; // 目标区间最大值
     double proportion = (originalValue - aMin) / (aMax - aMin);
     double targetValue = bMin + (proportion * (bMax - bMin));
     return targetValue;

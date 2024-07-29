@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:eden/entities/toy_command_entity.dart';
-import 'package:eden/utils/vibration_utils.dart';
+import 'package:eden/utils/eden_vibration.dart';
 import 'package:eden_uikit/eden_uikit.dart';
 import 'package:flutter/material.dart';
 
@@ -153,7 +153,7 @@ class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
       return;
     }
     _callbackTime = DateTime.now();
-    VibrationUtils.cancel();
+    EdenVibration.cancel();
     if (end || _points.isEmpty) {
       widget.onChanged([0, 0], []);
       widget.onEnd.call();
@@ -171,7 +171,7 @@ class EdenPlayGestureDetectorState extends State<EdenPlayGestureDetector> {
               .vibrate(_size.height)
         ], _lineNotifier.lines);
       }
-      VibrationUtils.vibrate(
+      EdenVibration.vibrate(
         amplitude: mobileVibrate,
         duration: _callbackInterval,
       );

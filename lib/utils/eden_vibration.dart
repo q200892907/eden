@@ -1,6 +1,6 @@
 import 'package:vibration/vibration.dart';
 
-class VibrationUtils {
+class EdenVibration {
   static bool _isVibrate = false;
 
   static void vibrate({int amplitude = -1, int duration = 500}) {

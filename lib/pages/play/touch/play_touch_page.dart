@@ -8,7 +8,7 @@ import 'package:eden/toy/toy_provider.dart';
 import 'package:eden/uikit/appbar/eden_gradient_app_bar.dart';
 import 'package:eden/uikit/background/eden_background.dart';
 import 'package:eden/uikit/button/eden_gradient_button.dart';
-import 'package:eden/utils/chart_util.dart';
+import 'package:eden/utils/eden_chart_util.dart';
 import 'package:eden_intl/eden_intl.dart';
 import 'package:eden_service/eden_service.dart';
 import 'package:eden_uikit/eden_uikit.dart';
@@ -70,7 +70,7 @@ class _PlayTouchPageState extends State<PlayTouchPage> {
 
   void _save() {
     // TODO: 保存逻辑
-    ChartUtil.instance.addChart(
+    EdenChartUtil.instance.addChart(
       EdenAccountService.instance.account?.id ?? '',
       DateTime.now().toString(),
       _chartNotifier.value,
@@ -136,14 +136,14 @@ class _PlayTouchPageState extends State<PlayTouchPage> {
                     ),
                     Expanded(
                       child: ValueListenableBuilder(
-                          valueListenable: ChartUtil.instance.charts,
+                          valueListenable: EdenChartUtil.instance.charts,
                           builder: (context, charts, __) {
                             return EdenGradientButton(
                               title: '历史(${charts.length})',
                               onTap: () {
                                 print(charts);
                                 for (var e in charts) {
-                                  ChartUtil.instance.deleteChart(e);
+                                  EdenChartUtil.instance.deleteChart(e);
                                 }
                               },
                             );
