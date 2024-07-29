@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -24,6 +26,43 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法媒体资料库中的相关数据</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用蓝牙连接蓝牙设备</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用蓝牙连接设备</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用日历来查看日程</string>
+	<key>NSCameraUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用拍照功能来更换头像或发送照片等功能</string>
+	<key>NSContactsUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用查看通讯录中相关人员信息</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>您的位置将用于查看附近相关数据,还可用于准确接收本地信息</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>您的位置将用于查看附近相关数据,还可用于准确接收本地信息</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>您的位置将用于查看附近相关数据,还可用于准确接收本地信息</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>请选择允许访问,若不允许，您将无法使用视频通话等功能</string>
+	<key>NSMotionUsageDescription</key>
+	<string>请选择允许访问,若不允许，您将无法使用运动健身相关的数据</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法存储照片或视频</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用相册中的照片更新用户头像等相册相关功能</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>请选择允许访问。若不允许，您将无法使用聊天会话中等语音识别功能</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>为了向您提供更优质、喜欢的服务，我们想访问您的广告标识符</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,9 +80,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>
